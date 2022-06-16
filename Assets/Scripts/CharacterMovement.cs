@@ -7,6 +7,7 @@ public class CharacterMovement : MonoBehaviour
 
     float verticalInput, horizontalInput;
     public CharacterController characterController;
+    PlayerManager playerManager;
     Vector3 direction;
     public float speed = 12;
     public float gravity = -9.81f;
@@ -25,7 +26,7 @@ public class CharacterMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        playerManager = GetComponent<PlayerManager>();
     }
 
     // Update is called once per frame
@@ -43,7 +44,8 @@ public class CharacterMovement : MonoBehaviour
 
         direction = transform.right * horizontalInput + transform.forward * verticalInput;
 
-        characterController.Move(direction * Time.deltaTime * speed);
+        if (playerManager.isAlive)
+            characterController.Move(direction * Time.deltaTime * speed);
 
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
