@@ -9,7 +9,9 @@ public class CharacterMovement : MonoBehaviour
     public CharacterController characterController;
     PlayerManager playerManager;
     Vector3 direction;
-    public float speed = 12;
+    float speed;
+    [SerializeField] float normalSpeed = 8;
+    [SerializeField] float runSpeed = 12;
     public float gravity = -9.81f;
     public float jumpHeight = 3;
     Vector3 yVelocity;
@@ -27,6 +29,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         playerManager = GetComponent<PlayerManager>();
+        speed = normalSpeed;
     }
 
     // Update is called once per frame
@@ -34,29 +37,51 @@ public class CharacterMovement : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(isGroundedGO.position, checkGroundRadius, groundLayer);
 
+        if (playerManager.isAlive)
+        {
+            SimulateGravity();
+
+            verticalInput = Input.GetAxis("Vertical");
+            horizontalInput = Input.GetAxis("Horizontal");
+
+            direction = transform.right * horizontalInput + transform.forward * verticalInput;
+
+            if (Input.GetButtonDown("Run"))
+            {
+                speed = runSpeed;
+            }
+            if (Input.GetButtonUp("Run"))
+            {
+                speed = normalSpeed;
+            }
+
+            //Move the player to the direction.
+            characterController.Move(direction * Time.deltaTime * speed);
+
+            if (isGrounded && Input.GetButtonDown("Jump"))
+            {
+                yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+            }
+
+            //Move the player on the y axis.
+            //Y velocity depends on gravity and changes if we are jumping
+            characterController.Move(yVelocity * Time.deltaTime);
+        }
+
+
+    }
+
+    void SimulateGravity()
+    {
+        //Reset gravity if we are on the ground
         if (isGrounded && yVelocity.y < 0)
         {
+            //We use -2 in order to avoid bugs related to 0 speed.
             yVelocity.y = -2;
         }
 
-        verticalInput = Input.GetAxis("Vertical");
-        horizontalInput = Input.GetAxis("Horizontal");
-
-        direction = transform.right * horizontalInput + transform.forward * verticalInput;
-
-        if (playerManager.isAlive)
-            characterController.Move(direction * Time.deltaTime * speed);
-
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-        }
-
+        //Increase yvelocity by the force of gravity every second
         yVelocity.y += gravity * Time.deltaTime;
-
-        characterController.Move(yVelocity * Time.deltaTime);
-
-
     }
 
     private void OnDrawGizmos()

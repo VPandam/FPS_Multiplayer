@@ -61,6 +61,11 @@ public class PlayerManager : MonoBehaviour
             gameManager.GameOver();
         }
     }
+    public void Heal(int healAmmount)
+    {
+        currentHealth += healAmmount;
+        UpdateHealthText();
+    }
 
 
 }

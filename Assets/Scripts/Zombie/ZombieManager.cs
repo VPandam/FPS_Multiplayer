@@ -14,6 +14,11 @@ public class ZombieManager : MonoBehaviour
     [SerializeField] Slider HPSlider;
     ZombieController zombieController;
 
+    [SerializeField] AudioClip[] growlClips;
+    AudioSource audioSource;
+    float CDGrowlTime = 2;
+    float counter = 0;
+
 
     public GameManager gameManager;
 
@@ -26,10 +31,23 @@ public class ZombieManager : MonoBehaviour
         currentHealth = maxHealth;
         isAlive = true;
         HPSlider.value = currentHealth / maxHealth;
+        audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
-        HPSlider.transform.LookAt(zombieController.playerTarget.transform);
+        if (gameManager.CurrentGameState == GameState.inGame)
+        {
+
+            HPSlider.transform.LookAt(zombieController.playerTarget.transform);
+
+            if (counter >= CDGrowlTime && !audioSource.isPlaying && isAlive)
+            {
+                Growl();
+            }
+            counter += Time.deltaTime;
+        }
+
+
     }
 
     // Start is called before the first frame update
@@ -48,8 +66,15 @@ public class ZombieManager : MonoBehaviour
         isAlive = false;
         HPSlider.gameObject.SetActive(false);
         animator.SetTrigger(dieAnimationTrigger);
-        IEnumerator lookForEnemiesCoroutine = gameManager.LookForEnemies();
-        gameManager.StartCoroutine(lookForEnemiesCoroutine);
+        gameManager.StartCoroutine(gameManager.LookForEnemies());
         Destroy(gameObject, 3);
     }
+    void Growl()
+    {
+        audioSource.clip = growlClips[Random.Range(0, growlClips.Length)];
+        audioSource.Play();
+        counter = 0;
+    }
+
+
 }

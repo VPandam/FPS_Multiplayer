@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class ZombieController : MonoBehaviour
 {
     public GameObject playerTarget;
+    Vector3 target;
     float distanceToPlayer;
     NavMeshAgent navMeshAgent;
 
@@ -42,26 +43,29 @@ public class ZombieController : MonoBehaviour
 
     float maxSpeed;
     NavMeshPath path;
+    [SerializeField] float armLength = 1.5f;
 
     // Start is called before the first frame update
     void Start()
     {
         zombieManager = gameObject.GetComponent<ZombieManager>();
+
         playerTarget = GameObject.FindGameObjectWithTag("Player");
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = Random.Range(minMovementSpeed, maxMovementSpeed);
         maxSpeed = navMeshAgent.speed;
         path = new NavMeshPath();
 
-        rangeToAttack = navMeshAgent.stoppingDistance + 0.5f;
+        rangeToAttack = navMeshAgent.stoppingDistance + 0.1f;
         attackSpeed = Random.Range(minAttackSpeed, maxAttackSpeed);
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        distanceToPlayer = Vector3.Distance(transform.position, playerTarget.transform.position);
+        //In order to move the enemy even when the player is jumping, we set the target vector y to 0.
+        target = new Vector3(playerTarget.transform.position.x, 0, playerTarget.transform.position.z);
+        distanceToPlayer = Vector3.Distance(transform.position, target);
         isInRangeToMove = (distanceToPlayer < rangeToMove);
         isInRangeToAttack = distanceToPlayer <= rangeToAttack;
         isAlive = zombieManager.isAlive;
@@ -78,9 +82,8 @@ public class ZombieController : MonoBehaviour
         //Sets the speed of the animation to the zombie speed
         animator.SetFloat(runningSpeed, navMeshAgent.velocity.magnitude / maxSpeed);
 
-
         //Checks if the player is in a reachable place
-        navMeshAgent.CalculatePath(playerTarget.transform.position, path);
+        navMeshAgent.CalculatePath(target, path);
 
         //move to the player direction if the player is in a reachable place,
         //the distance to the player is bigger than the attack range and lower than the moveRange,
@@ -89,7 +92,7 @@ public class ZombieController : MonoBehaviour
         !isInRangeToAttack && isAlive)
         {
             animator.SetBool(isRunningBool, true);
-            navMeshAgent.SetDestination(playerTarget.transform.position);
+            navMeshAgent.SetDestination(target);
         }
         else
         {
@@ -114,13 +117,15 @@ public class ZombieController : MonoBehaviour
     }
     void FaceTarget()
     {
-        Vector3 lookDirection = (playerTarget.transform.position - transform.position).normalized;
+        Vector3 lookDirection = (target - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(lookDirection.x, 0f, lookDirection.z));
         transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
+//It's called when the zombie stretches his arm to attack
     public void MakeDamage()
     {
-        playerTarget.GetComponent<PlayerManager>().TakeDamage(attackDamage);
+        if (distanceToPlayer <= rangeToAttack + armLength)
+            playerTarget.GetComponent<PlayerManager>().TakeDamage(attackDamage);
     }
 }

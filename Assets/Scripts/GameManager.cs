@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     bool gamePaused;
     [SerializeField] GameObject pausePanel;
+    [SerializeField] GameObject fadeInGamePanel;
     GameState currentGameState;
     public GameState CurrentGameState { get => currentGameState; }
 
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         currentGameState = GameState.inGame;
+        StartCoroutine(FadeInOrOutPanel(fadeInGamePanel, 3, false, false));
         StartCoroutine(LookForEnemies());
     }
 
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour
         {
             if (currentGameState == GameState.pause)
                 Resume();
-            else
+            else if (currentGameState == GameState.inGame)
                 Pause();
         }
     }
@@ -81,10 +83,12 @@ public class GameManager : MonoBehaviour
 
             GameObject enemy = Instantiate(zombiePrefab, spawners[randomSpawnIndex].transform.position,
             Quaternion.identity);
-            enemy.GetComponent<ZombieManager>().gameManager = this;
+            if (enemy != null)
+                enemy.GetComponent<ZombieManager>().gameManager = this;
         }
     }
 
+    //TODO: Change round animation
     public IEnumerator LookForEnemies()
     {
         yield return new WaitForSeconds(3.2f);
@@ -100,20 +104,37 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = GameState.gameOver;
         roundsSurvivedText.text = $"ROUNDS SURVIVED: {currentRound}";
-        StartCoroutine(FadeInGameOverPanel());
+        StartCoroutine(FadeInOrOutPanel(gameOverPanel, 2, true, true));
     }
 
-    IEnumerator FadeInGameOverPanel()
+    IEnumerator FadeInOrOutPanel(GameObject panel, float time, bool fadeIn, bool stopTime)
     {
-        CanvasGroup cg = gameOverPanel.GetComponent<CanvasGroup>();
+        Debug.Log("FadeInOrOut");
+        CanvasGroup cg = panel.GetComponent<CanvasGroup>();
         cg.gameObject.SetActive(true);
-        while (cg.alpha < 1)
+
+        if (fadeIn)
         {
-            cg.alpha += Time.deltaTime / 3;
-            yield return null;
+            while (cg.alpha < 1)
+            {
+                cg.alpha += Time.deltaTime / time;
+                yield return null;
+            }
         }
-        Time.timeScale = 0;
-        Cursor.lockState = CursorLockMode.None;
+        if (!fadeIn)
+        {
+            while (cg.alpha > 0)
+            {
+                cg.alpha -= Time.deltaTime / time;
+                yield return null;
+            }
+        }
+
+        if (stopTime)
+        {
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     public void Restart()
@@ -122,7 +143,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         currentGameState = GameState.pause;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
     }
 
     public void GoToMenu()
@@ -146,5 +166,8 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         pausePanel.SetActive(false);
     }
-
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
