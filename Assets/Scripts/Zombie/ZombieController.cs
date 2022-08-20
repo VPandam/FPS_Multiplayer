@@ -122,7 +122,7 @@ public class ZombieController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-//It's called when the zombie stretches his arm to attack
+    //It's called when the zombie stretches his arm to attack
     public void MakeDamage()
     {
         if (distanceToPlayer <= rangeToAttack + armLength)

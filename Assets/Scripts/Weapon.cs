@@ -20,6 +20,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] CameraShake cameraShake;
     [SerializeField] TrailRenderer trail;
     [SerializeField] GameObject trailGO;
+    [SerializeField] GameObject hitCross;
+    HitCross hitCrossScript;
 
     //Stats
     float range = 1000;
@@ -27,28 +29,34 @@ public class Weapon : MonoBehaviour
     [SerializeField] float bulletSpeed = 100;
     [SerializeField] bool isAutomatic;
 
-    RaycastHit hit;
-    Vector3 targetDirection;
-    string enemyTag = "Enemy";
 
     //Animations
     string animationAim = "isAiming";
     string animationReload = "isReloading";
     string animationShoot = "shoot";
 
+    //The index of the animation layer we use when enabling this weapon.
+    [SerializeField] int animationLayerIndex;
+
+
     //Buttons
     string reloadButton = "Reload";
     string fire1 = "Fire1";
     string aimButton = "Aim";
 
+    //Shooting
+
     bool hittingSomething;
     bool isAiming;
+    RaycastHit hit;
+    Vector3 targetDirection;
+    string enemyTag = "Enemy";
 
     //Reload system
     int currentAmmo, currentReserveAmmo;
     [SerializeField] int maxAmmo = 30, maxReserveAmmo = 99;
     [SerializeField] float reloadTime = 2;
-    bool isReloading;
+    public bool isReloading;
     [SerializeField] TextMeshProUGUI currentAmmoText, reserveAmmoText;
 
     //ShootRatio
@@ -59,12 +67,15 @@ public class Weapon : MonoBehaviour
 
 
 
+
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         currentAmmo = maxAmmo;
         currentReserveAmmo = maxReserveAmmo;
+        hitCrossScript = hitCross.GetComponent<HitCross>();
     }
 
     // Update is called once per frame
@@ -144,12 +155,20 @@ public class Weapon : MonoBehaviour
         if (hittingSomething)
         {
             GameObject gameObjectHitted = hit.transform.gameObject;
+            ZombieManager enemyManager = gameObjectHitted.GetComponent<ZombieManager>();
             //If we hit an enemy
-            if (gameObjectHitted.CompareTag(enemyTag))
+            if (enemyManager != null && enemyManager.isAlive)
             {
                 //Make damage to the enemy
                 gameObjectHitted.GetComponent<ZombieManager>().TakeDamage(
                 hit.collider.gameObject.name == "HeadCollider" ? weaponDamage * 2 : weaponDamage);
+
+                //Activates a cross that shows we hitted the enemy.
+                //If it is already active, reset the time to disable it
+                if (hitCross.activeSelf)
+                    hitCrossScript.RestartDisableCall();
+                else
+                    hitCross.SetActive(true);
             }
         }
     }
@@ -234,11 +253,9 @@ public class Weapon : MonoBehaviour
 
     IEnumerator Reload()
     {
-        // //If we were aiming when reload starts we need to reset it.
-        // SetAimMode(false);
-        //unable the aim cross
-        aimCross.enabled = false;
 
+        //Unable the aim cross
+        aimCross.enabled = false;
 
         isReloading = true;
         animator.SetBool(animationReload, true);
@@ -272,12 +289,35 @@ public class Weapon : MonoBehaviour
         }
 
     }
+    public void CancelReload()
+    {
+        StopCoroutine("Reload");
+        isReloading = false;
+        //enable the aim cross once we have finished reloading.
+        aimCross.enabled = true;
+        //Checks if we are aiming to chose the next animation
+        AimSystem();
+        //Set the irReloading parameter to false
+        animator.SetBool(animationReload, false);
+
+    }
 
     void SetAmmoText()
     {
         //The current ammo text needs to have a slide at the end.
         currentAmmoText.text = $"{currentAmmo} /";
         reserveAmmoText.text = currentReserveAmmo.ToString();
+    }
+
+    //On enable the weapon set the layer weight of the animation layer to 1
+    private void OnEnable()
+    {
+        animator.SetLayerWeight(animationLayerIndex, 1);
+    }
+    //On disable the weapon set the layer weight of the animation layer to 0
+    private void OnDisable()
+    {
+        animator.SetLayerWeight(animationLayerIndex, 0);
     }
 
 

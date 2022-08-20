@@ -64,10 +64,7 @@ public class CharacterMovementMobile : MonoBehaviour
 
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawSphere(isGroundedGO.position, checkGroundRadius);
-    }
+
     void GetTouchInput()
     {
         if (Input.touchCount > 0)
