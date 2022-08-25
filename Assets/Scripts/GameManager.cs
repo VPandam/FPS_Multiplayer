@@ -7,38 +7,34 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    inGame, pause, gameOver, menu
+    inGame, pause, gameOver, menu, shop
 }
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    int maxFrames = 90;
-    [SerializeField]
-    GameObject[] spawners;
+    [SerializeField] int maxFrames = 90;
+    [SerializeField] GameObject[] spawners;
     int currentRound;
 
-    [SerializeField]
-    TextMeshProUGUI roundText;
-    [SerializeField]
-    TextMeshProUGUI roundsSurvivedText;
+    [SerializeField] TextMeshProUGUI roundText;
+    [SerializeField] TextMeshProUGUI roundsSurvivedText;
 
     string stringRoundText;
 
-    [SerializeField]
-    GameObject zombiePrefab;
+    [SerializeField] GameObject zombiePrefab;
 
-    [SerializeField]
-    GameObject gameOverPanel;
+    [SerializeField] GameObject gameOverPanel;
 
     //Depending on whitch platform we are on, we load one or other scene.
-    [SerializeField]
-    string menuScene, mainScene;
+    [SerializeField] string menuScene, mainScene;
 
     bool gamePaused;
     [SerializeField] GameObject pausePanel;
+
+    //Black panel used for fade in when the game starts
     [SerializeField] GameObject fadeInGamePanel;
     GameState currentGameState;
     public GameState CurrentGameState { get => currentGameState; }
+    [SerializeField] VendingMachine vendingMachine;
 
 
     // Start is called before the first frame update
@@ -60,10 +56,16 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Pause"))
         {
-            if (currentGameState == GameState.pause)
-                Resume();
-            else if (currentGameState == GameState.inGame)
-                Pause();
+            switch (currentGameState)
+            {
+                case GameState.pause:
+                    Resume(); break;
+                case GameState.inGame:
+                    Pause(); break;
+                case GameState.shop:
+                    vendingMachine.ExitShop(); break;
+            }
+
         }
     }
 
@@ -158,6 +160,12 @@ public class GameManager : MonoBehaviour
         currentGameState = GameState.pause;
         Time.timeScale = 0;
         pausePanel.SetActive(true);
+    }
+    public void Shop()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        currentGameState = GameState.shop;
+        Time.timeScale = 0;
     }
     public void Resume()
     {

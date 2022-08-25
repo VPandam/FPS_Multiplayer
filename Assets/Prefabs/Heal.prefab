@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1874289813281551989}
   - component: {fileID: 8188489777278920748}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
