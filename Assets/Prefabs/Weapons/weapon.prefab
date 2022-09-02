@@ -194,18 +194,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7f7ba7fdfd5834287ca9cc5b8e0f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponType: 0
   cameraGO: {fileID: 0}
-  weaponDamage: 10
+  animator: {fileID: 0}
+  flashShot: {fileID: 3490645513372864414}
+  shotClip: {fileID: 8300000, guid: e749dc2b9f9210a428c6a9d179d5e3a7, type: 3}
   aimCross: {fileID: 0}
   normalCross: {fileID: 21300000, guid: ee6b7ca0c3bb6674c95e44f898d774f1, type: 3}
   redCross: {fileID: 21300000, guid: adb53085daf953040bbd5c5c3e64b7f6, type: 3}
-  animator: {fileID: 0}
   cameraShake: {fileID: 0}
   trail: {fileID: 1690990362265313826, guid: 2bf857b4ea6116645ad1fc33bcb39282, type: 3}
   trailGO: {fileID: 0}
+  hitCross: {fileID: 0}
+  weaponDamage: 13
   bulletSpeed: 100
-  flashShot: {fileID: 3490645513372864414}
-  shotClip: {fileID: 8300000, guid: e749dc2b9f9210a428c6a9d179d5e3a7, type: 3}
+  isAutomatic: 0
+  animationLayerIndex: 0
+  maxAmmo: 30
+  maxReserveAmmo: 99
+  reloadTime: 2
+  isReloading: 0
+  currentAmmoText: {fileID: 0}
+  reserveAmmoText: {fileID: 0}
+  fireRate: 0.3
 --- !u!1001 &5707265223790455902
 PrefabInstance:
   m_ObjectHideFlags: 0

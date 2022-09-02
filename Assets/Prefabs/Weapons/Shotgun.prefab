@@ -233,6 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7f7ba7fdfd5834287ca9cc5b8e0f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponType: 3
   cameraGO: {fileID: 0}
   animator: {fileID: 0}
   flashShot: {fileID: 0}
@@ -244,7 +245,7 @@ MonoBehaviour:
   trail: {fileID: 1690990362265313826, guid: 2bf857b4ea6116645ad1fc33bcb39282, type: 3}
   trailGO: {fileID: 0}
   hitCross: {fileID: 0}
-  weaponDamage: 25
+  weaponDamage: 13
   bulletSpeed: 10
   isAutomatic: 0
   animationLayerIndex: 4

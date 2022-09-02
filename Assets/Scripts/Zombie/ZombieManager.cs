@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class ZombieManager : MonoBehaviour
 {
 
-    public int currentHealth;
-    [SerializeField]
-    int maxHealth;
+    public float currentHealth;
+    [SerializeField] float maxHealth;
+    Collider _collider;
     public bool isAlive;
     [SerializeField] Slider HPSlider;
     ZombieController zombieController;
@@ -32,6 +32,7 @@ public class ZombieManager : MonoBehaviour
         isAlive = true;
         HPSlider.value = currentHealth / maxHealth;
         audioSource = GetComponent<AudioSource>();
+        _collider = GetComponent<Collider>();
     }
     private void Update()
     {
@@ -52,7 +53,7 @@ public class ZombieManager : MonoBehaviour
 
     // Start is called before the first frame update
 
-    public void TakeDamage(int damageAmmount)
+    public void TakeDamage(float damageAmmount)
     {
         currentHealth -= damageAmmount;
         HPSlider.value = (float)currentHealth / (float)maxHealth;
@@ -66,6 +67,7 @@ public class ZombieManager : MonoBehaviour
         isAlive = false;
         HPSlider.gameObject.SetActive(false);
         animator.SetTrigger(dieAnimationTrigger);
+        _collider.enabled = false;
         gameManager.StartCoroutine(gameManager.LookForEnemies());
         Destroy(gameObject, 3);
     }

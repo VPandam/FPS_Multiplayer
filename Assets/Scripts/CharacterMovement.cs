@@ -17,10 +17,8 @@ public class CharacterMovement : MonoBehaviour
     Vector3 yVelocity;
     public Transform isGroundedGO;
     bool isGrounded;
-    [SerializeField]
-    float checkGroundRadius;
-    [SerializeField]
-    public LayerMask groundLayer;
+    [SerializeField] float checkGroundRadius;
+    [SerializeField] public LayerMask groundLayer;
 
 
 

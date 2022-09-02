@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = GameState.inGame;
         StartCoroutine(FadeInOrOutPanel(fadeInGamePanel, 3, false, false));
-        StartCoroutine(LookForEnemies());
+        StartCoroutine(StartNextRound());
     }
 
     // Update is called once per frame
@@ -76,8 +76,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("SetRound");
     }
 
-    void StartNextRound()
+    IEnumerator StartNextRound()
     {
+        //TODO: Animation and sound changing roung
+        yield return new WaitForSeconds(3);
         SetRound(currentRound + 1);
         for (int i = 0; i < currentRound; i++)
         {
@@ -98,7 +100,7 @@ public class GameManager : MonoBehaviour
 
         if (enemiesAlive.Length == 0)
         {
-            StartNextRound();
+            StartCoroutine(StartNextRound());
         }
     }
 
@@ -163,9 +165,10 @@ public class GameManager : MonoBehaviour
     }
     public void Shop()
     {
+        Debug.Log("WTF");
         Cursor.lockState = CursorLockMode.None;
         currentGameState = GameState.shop;
-        Time.timeScale = 0;
+        Debug.Log(currentGameState);
     }
     public void Resume()
     {

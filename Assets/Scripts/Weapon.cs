@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum WeaponType { pistol, rifle, machinegun, shotgun }
 public class Weapon : MonoBehaviour
 {
+
     //Components
+    [SerializeField] WeaponSO weaponSO;
     [SerializeField] GameObject cameraGO;
     GameManager gameManager;
     [SerializeField] Animator animator;
@@ -23,11 +26,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] GameObject hitCross;
     HitCross hitCrossScript;
 
-    //Stats
-    float range = 1000;
-    public int weaponDamage = 10;
-    [SerializeField] float bulletSpeed = 100;
-    [SerializeField] bool isAutomatic;
+
 
 
     //Animations
@@ -45,7 +44,7 @@ public class Weapon : MonoBehaviour
     string aimButton = "Aim";
 
     //Shooting
-
+    float range = 1000;
     bool hittingSomething;
     bool isAiming;
     RaycastHit hit;
@@ -54,14 +53,11 @@ public class Weapon : MonoBehaviour
 
     //Reload system
     int currentAmmo, currentReserveAmmo;
-    [SerializeField] int maxAmmo = 30, maxReserveAmmo = 99;
-    [SerializeField] float reloadTime = 2;
+
     public bool isReloading;
     [SerializeField] TextMeshProUGUI currentAmmoText, reserveAmmoText;
 
     //ShootRatio
-    [SerializeField]
-    float fireRate = 0.3f;
     float nextShootTime;
 
 
@@ -73,8 +69,8 @@ public class Weapon : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        currentAmmo = maxAmmo;
-        currentReserveAmmo = maxReserveAmmo;
+        currentAmmo = weaponSO.maxAmmo;
+        currentReserveAmmo = weaponSO.maxReserveAmmo;
         hitCrossScript = hitCross.GetComponent<HitCross>();
     }
 
@@ -99,7 +95,7 @@ public class Weapon : MonoBehaviour
 
             //Reload when our current ammo is 0.
             if ((currentAmmo <= 0 && !isReloading) ||
-            (currentAmmo < maxAmmo && !isReloading && Input.GetButtonDown(reloadButton)))
+            (currentAmmo < weaponSO.maxAmmo && !isReloading && Input.GetButtonDown(reloadButton)))
             {
                 StartCoroutine(Reload());
                 return;
@@ -111,11 +107,11 @@ public class Weapon : MonoBehaviour
                 //Called on update to check if we are hitting the Aim button, if so, change to aim mode.
                 AimSystem();
 
-                if (Input.GetButton(fire1) && Time.time >= nextShootTime && isAutomatic)
+                if (Input.GetButton(fire1) && Time.time >= nextShootTime && weaponSO.isAutomatic)
                 {
                     Shoot();
                 }
-                if (Input.GetButtonDown(fire1) && Time.time >= nextShootTime && !isAutomatic)
+                if (Input.GetButtonDown(fire1) && Time.time >= nextShootTime && !weaponSO.isAutomatic)
                 {
                     Shoot();
                 }
@@ -129,7 +125,7 @@ public class Weapon : MonoBehaviour
 
         //Calculate next shoot time
         float shootTime = Time.time;
-        nextShootTime = shootTime + fireRate;
+        nextShootTime = shootTime + weaponSO.fireRate;
 
         //Camera shake
         cameraShake.StartCoroutine(cameraShake.Shake(0.1f, 0.2f));
@@ -159,9 +155,26 @@ public class Weapon : MonoBehaviour
             //If we hit an enemy
             if (enemyManager != null && enemyManager.isAlive)
             {
+                float totalDamage = weaponSO.weaponDamage;
+
+                //If we are using a shotgun we make double damage if the enemy is close
+                if (weaponSO.weaponType == WeaponType.shotgun)
+                {
+                    if (Vector3.Distance(transform.position, enemyManager.transform.position) < 3)
+                    {
+                        totalDamage *= 2;
+                    }
+                }
+
+                //If we make a headshot we double the total damage
+                //Machinegun is so powerfull, so i made headshots half strong
+                if (hit.collider.gameObject.name == "HeadCollider")
+                    totalDamage *= weaponSO.weaponType == WeaponType.machinegun ? 1.5f : 2;
+
                 //Make damage to the enemy
-                gameObjectHitted.GetComponent<ZombieManager>().TakeDamage(
-                hit.collider.gameObject.name == "HeadCollider" ? weaponDamage * 2 : weaponDamage);
+                enemyManager.TakeDamage(totalDamage);
+                Debug.Log(totalDamage);
+
 
                 //Activates a cross that shows we hitted the enemy.
                 //If it is already active, reset the time to disable it
@@ -191,7 +204,7 @@ public class Weapon : MonoBehaviour
             destiny, 1 - (remainingDistance / distanceToHit));
 
             //Every frame we substract some distance depending of the bullet speed.
-            remainingDistance -= bulletSpeed * Time.deltaTime;
+            remainingDistance -= weaponSO.bulletSpeed * Time.deltaTime;
 
             yield return null;
         }
@@ -260,7 +273,7 @@ public class Weapon : MonoBehaviour
         isReloading = true;
         animator.SetBool(animationReload, true);
         //Wait for seconds equal to the reload time variable
-        yield return new WaitForSeconds(reloadTime);
+        yield return new WaitForSeconds(weaponSO.reloadTime);
         isReloading = false;
         //enable the aim cross once we have finished reloading.
         aimCross.enabled = true;
@@ -272,14 +285,14 @@ public class Weapon : MonoBehaviour
 
 
         //Ammount of bullets to substra to reserve ammo in order to have the max current ammo
-        int ammountToReload = maxAmmo - currentAmmo;
+        int ammountToReload = weaponSO.maxAmmo - currentAmmo;
 
         //If there is enough reserve ammo
         //set the current ammo to the maximum and substract it from reserve.
         if (currentReserveAmmo - ammountToReload >= 0)
         {
-            currentReserveAmmo -= maxAmmo - currentAmmo;
-            currentAmmo = maxAmmo;
+            currentReserveAmmo -= weaponSO.maxAmmo - currentAmmo;
+            currentAmmo = weaponSO.maxAmmo;
         }
         //Set the reserve to 0 and get all is left.
         else
