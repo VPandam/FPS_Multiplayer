@@ -5,7 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
-  - GameManager
+  - ItemButton
+  - Spawner
   layers:
   - Default
   - TransparentFX

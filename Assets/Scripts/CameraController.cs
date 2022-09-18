@@ -12,10 +12,11 @@ public class CameraController : MonoBehaviour
 
 
     public float mouseSensitivity = 100;
-    [SerializeField] GameManager gameManager;
+    GameManager gameManager;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        gameManager = GameManager.sharedInstance;
     }
     private void Update()
     {

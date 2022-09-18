@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7f7ba7fdfd5834287ca9cc5b8e0f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
+  weaponSO: {fileID: 11400000, guid: fe5f2294ebbffdf488fa477847d4e7a2, type: 2}
   cameraGO: {fileID: 0}
   animator: {fileID: 0}
   flashShot: {fileID: 236935943021760882}
@@ -162,17 +162,10 @@ MonoBehaviour:
   trail: {fileID: 1690990362265313826, guid: 2bf857b4ea6116645ad1fc33bcb39282, type: 3}
   trailGO: {fileID: 5346030790166199624}
   hitCross: {fileID: 0}
-  weaponDamage: 10
-  bulletSpeed: 10
-  isAutomatic: 0
-  animationLayerIndex: 0
-  maxAmmo: 10
-  maxReserveAmmo: 55
-  reloadTime: 0.9
+  animationLayerIndex: 1
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}
-  fireRate: 0.3
 --- !u!1 &2919700717769262089
 GameObject:
   m_ObjectHideFlags: 0

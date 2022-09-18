@@ -20,13 +20,14 @@ public class ZombieManager : MonoBehaviour
     float counter = 0;
 
 
-    public GameManager gameManager;
+    [HideInInspector] public GameManager gameManager;
 
     //Animations
     public Animator animator;
     string dieAnimationTrigger = "isDead";
     void Start()
     {
+        gameManager = GameManager.sharedInstance;
         zombieController = GetComponent<ZombieController>();
         currentHealth = maxHealth;
         isAlive = true;

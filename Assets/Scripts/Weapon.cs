@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour
 {
 
     //Components
-    [SerializeField] WeaponSO weaponSO;
+    public WeaponSO weaponSO;
     [SerializeField] GameObject cameraGO;
     GameManager gameManager;
     [SerializeField] Animator animator;
@@ -34,8 +34,7 @@ public class Weapon : MonoBehaviour
     string animationReload = "isReloading";
     string animationShoot = "shoot";
 
-    //The index of the animation layer we use when enabling this weapon.
-    [SerializeField] int animationLayerIndex;
+
 
 
     //Buttons
@@ -60,7 +59,11 @@ public class Weapon : MonoBehaviour
     //ShootRatio
     float nextShootTime;
 
+    //True when we bought the weapon in the shop
+    public bool isAvailable;
 
+    //Index of the position in the weapon holder
+    [HideInInspector] public int indexPosition;
 
 
 
@@ -68,11 +71,13 @@ public class Weapon : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        gameManager = GameManager.sharedInstance;
         currentAmmo = weaponSO.maxAmmo;
         currentReserveAmmo = weaponSO.maxReserveAmmo;
         hitCrossScript = hitCross.GetComponent<HitCross>();
+        indexPosition = ((int)weaponSO.weaponType);
     }
+
 
     // Update is called once per frame
     void Update()
@@ -118,6 +123,7 @@ public class Weapon : MonoBehaviour
             }
         }
     }
+
 
     void Shoot()
     {
@@ -325,12 +331,17 @@ public class Weapon : MonoBehaviour
     //On enable the weapon set the layer weight of the animation layer to 1
     private void OnEnable()
     {
-        animator.SetLayerWeight(animationLayerIndex, 1);
+        animator.SetLayerWeight(weaponSO.animationLayerIndex, 1);
     }
     //On disable the weapon set the layer weight of the animation layer to 0
     private void OnDisable()
     {
-        animator.SetLayerWeight(animationLayerIndex, 0);
+        animator.SetLayerWeight(weaponSO.animationLayerIndex, 0);
+    }
+
+    public void SetAmmoToMax()
+    {
+        currentReserveAmmo = weaponSO.maxReserveAmmo;
     }
 
 

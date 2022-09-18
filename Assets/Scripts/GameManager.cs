@@ -11,6 +11,7 @@ public enum GameState
 }
 public class GameManager : MonoBehaviour
 {
+    public static GameManager sharedInstance;
     [SerializeField] int maxFrames = 90;
     [SerializeField] GameObject[] spawners;
     int currentRound;
@@ -36,12 +37,23 @@ public class GameManager : MonoBehaviour
     public GameState CurrentGameState { get => currentGameState; }
     [SerializeField] VendingMachine vendingMachine;
 
-
+    private void Awake()
+    {
+        if (sharedInstance == null)
+        {
+            sharedInstance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = maxFrames;
+        spawners = GameObject.FindGameObjectsWithTag("Spawner");
         StartGame();
     }
     void StartGame()
@@ -165,7 +177,6 @@ public class GameManager : MonoBehaviour
     }
     public void Shop()
     {
-        Debug.Log("WTF");
         Cursor.lockState = CursorLockMode.None;
         currentGameState = GameState.shop;
         Debug.Log(currentGameState);

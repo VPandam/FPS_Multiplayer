@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] float checkGroundRadius;
     [SerializeField] public LayerMask groundLayer;
 
-
+    [SerializeField] PhotonView photonView;
 
 
     // Start is called before the first frame update
@@ -33,6 +34,11 @@ public class CharacterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(PhotonNetwork.InRoom + " InRoom " + photonView.IsMine + " isMine");
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
         isGrounded = Physics.CheckSphere(isGroundedGO.position, checkGroundRadius, groundLayer);
 
         if (playerManager.isAlive)

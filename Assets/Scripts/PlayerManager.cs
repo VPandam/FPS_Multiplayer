@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using System.Linq;
 public class PlayerManager : MonoBehaviour
 {
     public float currentHealth = 100;
 
     public float maximumHealth = 100;
 
-    [SerializeField]
-    TextMeshProUGUI healthTMP;
+    [SerializeField] TextMeshProUGUI healthTMP;
     public bool isAlive;
     [SerializeField] CameraShake cameraShake;
 
@@ -22,17 +21,25 @@ public class PlayerManager : MonoBehaviour
 
     //Weapon change
     [SerializeField] GameObject weaponHolder;
-    int currentWeaponIndex;
     Weapon currentWeapon;
+
+    List<int> weaponsAvailableIndexes = new List<int>();
+    int currentWeaponIndex;
+
 
     void Start()
     {
+        gameManager = GameManager.sharedInstance;
+        
         currentWeaponIndex = 0;
         currentWeapon = weaponHolder.transform.GetChild(currentWeaponIndex).GetComponent<Weapon>();
         currentHealth = maximumHealth;
         healthTMP.text = $"HP: {currentHealth.ToString()}";
         isAlive = true;
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+
+        //All weapons are deactivated by default except pistol.
+        //When we buy a weapon we make it available
+        SetWeaponAvailable(WeaponType.pistol);
     }
 
     // Update is called once per frame
@@ -76,46 +83,98 @@ public class PlayerManager : MonoBehaviour
             gameManager.GameOver();
         }
     }
-    public void Heal(int healAmmount)
+    public void Heal(float healAmmount)
     {
         currentHealth += healAmmount;
+        UpdateHealthText();
+    }
+    public void Heal(bool max)
+    {
+        if (max)
+            currentHealth = maximumHealth;
         UpdateHealthText();
     }
 
     void CheckMouseWheelInput()
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
-            ChangeWeapon(currentWeaponIndex + 1);
+        {
+            if (currentWeaponIndex + 1 < weaponsAvailableIndexes.Count)
+            {
+                ChangeWeapon(weaponsAvailableIndexes[currentWeaponIndex + 1]);
+            }
+            else
+                ChangeWeapon(weaponsAvailableIndexes.First());
+        }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-            ChangeWeapon(currentWeaponIndex - 1);
+            if (currentWeaponIndex - 1 >= 0)
+                ChangeWeapon(weaponsAvailableIndexes[currentWeaponIndex - 1]);
+            else
+                ChangeWeapon(weaponsAvailableIndexes.Last());
 
     }
-    public void ChangeWeapon(int weaponIndex)
+
+    public void ChangeWeapon(int weaponsAvailableIndex)
     {
-        int index = 0;
-        int ammountOfWeapons = weaponHolder.transform.childCount;
+        // CheckWeaponsAvailable();
 
         if (currentWeapon.isReloading)
             currentWeapon.CancelReload();
 
-        //If we try to reach an unreachable index restart the index to the minimum or maximum
-        if (weaponIndex > ammountOfWeapons - 1)
-            weaponIndex = 0;
-        else if (weaponIndex < 0)
-            weaponIndex = ammountOfWeapons - 1;
 
-        Debug.Log(weaponIndex);
-        foreach (Transform weapon in weaponHolder.transform)
+        //Activate the weapon with the right index and deactivate the others.
+        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
         {
-            //Activate the weapon with the right index and deactivate the others.
-            weapon.gameObject.SetActive(index == weaponIndex);
-
-            index++;
+            if (weaponsAvailableIndex == weapon.indexPosition && weapon.isAvailable)
+            {
+                weapon.gameObject.SetActive(true);
+                currentWeapon = weapon;
+                currentWeaponIndex = weaponsAvailableIndexes.IndexOf(weaponsAvailableIndex);
+            }
+            else
+            {
+                weapon.gameObject.SetActive(false);
+            }
         }
 
-        currentWeaponIndex = weaponIndex;
-        currentWeapon = weaponHolder.transform.GetChild(currentWeaponIndex).GetComponent<Weapon>();
     }
 
+    void AddWeaponIndexToAvailable(int indexPosition)
+    {
+        if (!weaponsAvailableIndexes.Contains(indexPosition))
+            weaponsAvailableIndexes.Add(indexPosition);
+    }
 
+    /// <summary>
+    //Called through the shop interface when a weapon is bought
+    //Loop through all the weapons and make available the one that matches
+    //the weaponType passed by parameter
+    //Add it to available weapons
+    //Change to that weapon 
+    /// </summary>
+    /// <param name="weaponTypeToSetAvailable"></param>
+    public void SetWeaponAvailable(WeaponType weaponTypeToSetAvailable)
+    {
+
+        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
+        {
+            if (weapon.weaponSO.weaponType == weaponTypeToSetAvailable)
+            {
+                weapon.isAvailable = true;
+                AddWeaponIndexToAvailable(weapon.indexPosition);
+                ChangeWeapon(weapon.indexPosition);
+            }
+        }
+    }
+    public void BuyAmmo()
+    {
+        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
+        {
+            if (weapon.isAvailable)
+            {
+                weapon.SetAmmoToMax();
+            }
+        }
+
+    }
 }
