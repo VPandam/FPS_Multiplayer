@@ -22,20 +22,20 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    void OnEnable()
+    override public void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += InstantiatePlayer;
     }
-    void OnDisable()
+    override public void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= InstantiatePlayer;
     }
     void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= InstantiatePlayer;
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    void InstantiatePlayer(Scene scene, LoadSceneMode loadSceneMode)
     {
         Vector3 playerSpawnPosition = new Vector3(Random.Range(-3, 3), 2, Random.Range(-3, 3));
 

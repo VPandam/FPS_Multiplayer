@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
 public enum WeaponType { pistol, rifle, machinegun, shotgun }
 public class Weapon : MonoBehaviour
@@ -66,7 +67,7 @@ public class Weapon : MonoBehaviour
     [HideInInspector] public int indexPosition;
 
 
-
+    [SerializeField] PhotonView photonView;
 
     void Start()
     {
@@ -82,6 +83,11 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
+        
         SetAmmoText();
         if (gameManager.CurrentGameState == GameState.inGame)
         {

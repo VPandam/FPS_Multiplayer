@@ -34,7 +34,6 @@ public class CharacterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(PhotonNetwork.InRoom + " InRoom " + photonView.IsMine + " isMine");
         if (PhotonNetwork.InRoom && !photonView.IsMine)
         {
             return;

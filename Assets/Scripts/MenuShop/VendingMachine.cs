@@ -8,9 +8,8 @@ public class VendingMachine : MonoBehaviour
     GameManager gameManager;
     [SerializeField] GameObject doText;
     [SerializeField] GameObject firstSelectedButton;
-    bool isInRangeToOpenShop = false;
-    bool isShopOpen = false;
-    public PlayerManager playerManager;
+    public bool isShopOpen = false;
+    public PlayerManager _playerManager;
     public ShopSlot selectedShopSlot;
     EventSystem eventSystem;
     private void Start()
@@ -18,17 +17,9 @@ public class VendingMachine : MonoBehaviour
         gameManager = GameManager.sharedInstance;
         eventSystem = EventSystem.current;
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E) && isInRangeToOpenShop && !isShopOpen)
-            OpenShop();
-        else
-        if (Input.GetKeyDown(KeyCode.E) && isInRangeToOpenShop && isShopOpen)
-            ExitShop();
-    }
+
     private void OnTriggerEnter(Collider other)
     {
-        isInRangeToOpenShop = true;
         doText.SetActive(true);
     }
 
@@ -36,11 +27,11 @@ public class VendingMachine : MonoBehaviour
     {
         ExitShop();
         doText.SetActive(false);
-        isInRangeToOpenShop = false;
     }
 
-    void OpenShop()
+    public void OpenShop(PlayerManager playerManager)
     {
+        _playerManager = playerManager;
         Debug.Log("OpeningShop");
         shopCanvas.SetActive(true);
         eventSystem.SetSelectedGameObject(firstSelectedButton);
@@ -82,16 +73,18 @@ public class VendingMachine : MonoBehaviour
     }
     public void BuyWeapon()
     {
+        Debug.Log(_playerManager + " player manager vending machine");
         WeaponSO selectedWeaponSO = (WeaponSO)selectedShopSlot.itemSO;
-        playerManager.SetWeaponAvailable(selectedWeaponSO.weaponType);
+        _playerManager.SetWeaponAvailable(selectedWeaponSO.weaponType);
+        ExitShop();
     }
     public void BuyHeal()
     {
-        playerManager.Heal(true);
+        _playerManager.Heal(true);
     }
     public void BuyAmmo()
     {
-        playerManager.BuyAmmo();
+        _playerManager.BuyAmmo();
     }
 }
 

@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - ItemButton
   - Spawner
+  - GameManager
+  - VendingMachine
   layers:
   - Default
   - TransparentFX

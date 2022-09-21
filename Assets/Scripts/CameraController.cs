@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class CameraController : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class CameraController : MonoBehaviour
 
     public float mouseSensitivity = 100;
     GameManager gameManager;
+
+    [SerializeField] PhotonView photonView;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -20,6 +24,11 @@ public class CameraController : MonoBehaviour
     }
     private void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
+
         if (gameManager.CurrentGameState == GameState.inGame)
         {
             mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;

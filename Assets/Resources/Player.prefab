@@ -3879,6 +3879,7 @@ MonoBehaviour:
   takeDamageCG: {fileID: 5186473056762157314}
   damagedBlinkTime: 0.5
   weaponHolder: {fileID: 1243986291160104326}
+  photonView: {fileID: 2619255381216889689}
 --- !u!114 &2619255381216889689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4015,6 +4016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 6835297398406708624}
   mouseSensitivity: 100
+  photonView: {fileID: 2619255381216889689}
 --- !u!95 &1365765190095842442
 Animator:
   serializedVersion: 4
@@ -4190,6 +4192,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: fe5f2294ebbffdf488fa477847d4e7a2,
         type: 2}
+    - target: {fileID: 264150896629405790, guid: c71c805536c78694c95347ba2c57c816,
+        type: 3}
+      propertyPath: photonView
+      value: 
+      objectReference: {fileID: 2619255381216889689}
     - target: {fileID: 264150896629405790, guid: c71c805536c78694c95347ba2c57c816,
         type: 3}
       propertyPath: cameraShake
@@ -4421,6 +4428,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4314612995066617970}
     - target: {fileID: 584212451, guid: c531fb6335485f241b44171018bbd9a0, type: 3}
+      propertyPath: photonView
+      value: 
+      objectReference: {fileID: 2619255381216889689}
+    - target: {fileID: 584212451, guid: c531fb6335485f241b44171018bbd9a0, type: 3}
       propertyPath: cameraShake
       value: 
       objectReference: {fileID: 8198275870125664955}
@@ -4573,6 +4584,11 @@ PrefabInstance:
       propertyPath: flashShot
       value: 
       objectReference: {fileID: 5009267945209557803}
+    - target: {fileID: 812239382011541778, guid: 2276b8f19fb35664681a561d46006885,
+        type: 3}
+      propertyPath: photonView
+      value: 
+      objectReference: {fileID: 2619255381216889689}
     - target: {fileID: 812239382011541778, guid: 2276b8f19fb35664681a561d46006885,
         type: 3}
       propertyPath: cameraShake
@@ -4881,6 +4897,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2b1bb9307f4e07342b68194d6572326f,
         type: 2}
+    - target: {fileID: 2106907521089985004, guid: 77568649a3d50bd41a1f193c6c4bdfff,
+        type: 3}
+      propertyPath: photonView
+      value: 
+      objectReference: {fileID: 2619255381216889689}
     - target: {fileID: 2106907521089985004, guid: 77568649a3d50bd41a1f193c6c4bdfff,
         type: 3}
       propertyPath: bulletSpeed
@@ -5202,6 +5223,11 @@ PrefabInstance:
       propertyPath: pausePanel
       value: 
       objectReference: {fileID: 5186473058017610251}
+    - target: {fileID: 3568458309585931822, guid: 5eec71d38198f384bb780d1d615ad23b,
+        type: 3}
+      propertyPath: photonView
+      value: 
+      objectReference: {fileID: 2619255381216889689}
     - target: {fileID: 3568458309585931822, guid: 5eec71d38198f384bb780d1d615ad23b,
         type: 3}
       propertyPath: gameOverPanel

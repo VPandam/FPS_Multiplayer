@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public enum GameState
 {
@@ -35,7 +36,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject fadeInGamePanel;
     GameState currentGameState;
     public GameState CurrentGameState { get => currentGameState; }
-    [SerializeField] VendingMachine vendingMachine;
+    [HideInInspector] public VendingMachine vendingMachine;
+
+    [SerializeField] PhotonView photonView;
 
     private void Awake()
     {
@@ -66,6 +69,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
         if (Input.GetButtonDown("Pause"))
         {
             switch (currentGameState)
@@ -96,6 +103,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < currentRound; i++)
         {
             int randomSpawnIndex = Random.Range(0, spawners.Length);
+            Debug.Log(randomSpawnIndex + " RandomSpawnIndex " + spawners.Length);
 
             GameObject enemy = Instantiate(zombiePrefab, spawners[randomSpawnIndex].transform.position,
             Quaternion.identity);

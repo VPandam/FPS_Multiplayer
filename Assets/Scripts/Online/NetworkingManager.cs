@@ -15,6 +15,36 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     usernameInput, playerFoundUI, playerFoundHolder, idRoomText;
     string userName;
 
+    bool onUserNameScreen;
+
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Return) && onUserNameScreen)
+        {
+            SubmitUserName();
+        }
+    }
+    public void StartOnlineGame()
+    {
+        PhotonNetwork.LoadLevel("MainOnline");
+    }
+    public void MainToUserName()
+    {
+        mainPanel.SetActive(false);
+        usernamePanel.SetActive(true);
+        onUserNameScreen = true;
+    }
+    public void SubmitUserName()
+    {
+        TMP_InputField usernameInputField = usernameInput.GetComponent<TMP_InputField>();
+        usernameInputField.characterLimit = 10;
+        PhotonNetwork.NickName = usernameInputField.text;
+
+        ConnectToTheServer();
+    }
+
+
     public void ConnectToTheServer()
     {
         Debug.Log("Connecting to the server");
@@ -25,6 +55,7 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinLobby();
         Debug.Log("Connecting to the lobby");
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnJoinedLobby()
@@ -65,65 +96,42 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     }
     public void OpenLobbyScreen()
     {
-
         usernamePanel.SetActive(false);
-
         lobbyPanel.SetActive(true);
+        onUserNameScreen = false;
+
         idRoomText.GetComponent<TextMeshProUGUI>().text = PhotonNetwork.CurrentRoom.Name;
-
-        Player[] players = PhotonNetwork.PlayerList;
-
-        foreach (Transform child in playerFoundHolder.transform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        for (int i = 0; i < players.Length; i++)
-        {
-            Instantiate(playerFoundUI, playerFoundHolder.transform).
-            GetComponent<PlayerFoundUI>().SetUserName(players[i].NickName);
-            Debug.Log("Nickname: " + players[i].NickName);
-        }
-
+        UpdatePlayersListUI();
 
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        foreach (Transform trans in playerFoundHolder.transform)
-        {
-            Destroy(trans);
-        }
-        foreach (var player in roomList)
-        {
-            Instantiate(playerFoundUI, playerFoundHolder.transform)
-            .GetComponent<PlayerFoundUI>().SetUserName(player.Name);
-        }
+        UpdatePlayersListUI();
+    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        UpdatePlayersListUI();
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(playerFoundUI, playerFoundHolder.transform)
         .GetComponent<PlayerFoundUI>().SetUserName(newPlayer.NickName);
-        Debug.Log(newPlayer.NickName);
 
     }
 
-    public void StartOnlineGame()
+    void UpdatePlayersListUI()
     {
-        PhotonNetwork.LoadLevel("Online");
+        Player[] playerList = PhotonNetwork.PlayerList;
 
-    }
-    public void InputUserName()
-    {
-        mainPanel.SetActive(false);
-        usernamePanel.SetActive(true);
-    }
-    public void SubmitUserName()
-    {
-        TMP_InputField usernameInputField = usernameInput.GetComponent<TMP_InputField>();
-        usernameInputField.characterLimit = 10;
-        PhotonNetwork.NickName = usernameInputField.text;
+        foreach (Transform playerFound in playerFoundHolder.transform)
+        {
+            Destroy(playerFound.gameObject);
+        }
 
-        ConnectToTheServer();
+        for (int i = 0; i < playerList.Length; i++)
+        {
+            Instantiate(playerFoundUI, playerFoundHolder.transform).
+            GetComponent<PlayerFoundUI>().SetUserName(playerList[i].NickName);
+        }
     }
-
 }
