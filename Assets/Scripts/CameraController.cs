@@ -13,23 +13,28 @@ public class CameraController : MonoBehaviour
 
 
     public float mouseSensitivity = 100;
-    GameManager gameManager;
+    [SerializeField] GameManager gameManager;
 
     [SerializeField] PhotonView photonView;
+    [SerializeField] Camera _camera;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        gameManager = GameManager.sharedInstance;
+        if (!photonView.IsMine && PhotonNetwork.InRoom)
+        {
+            AudioListener audioListener = gameObject.GetComponentInChildren<AudioListener>();
+            Destroy(audioListener);
+        }
     }
     private void Update()
     {
         if (PhotonNetwork.InRoom && !photonView.IsMine)
         {
+            _camera.enabled = false;
             return;
         }
-
-        if (gameManager.CurrentGameState == GameState.inGame)
+        if (gameManager.CurrentLocalGameState == GameState.inGame)
         {
             mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;

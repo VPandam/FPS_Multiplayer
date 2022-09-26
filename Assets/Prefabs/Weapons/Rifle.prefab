@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7809556394774494874}
   - component: {fileID: 2277984230494815865}
   - component: {fileID: 841065591623661260}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493186029285439449}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &2277984230494815865
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1093838161694763602}
   - component: {fileID: 8681030700293116381}
   - component: {fileID: 4802544594620028708}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,14 +108,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 792216068879510593}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &8681030700293116381
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 282038569816961104}
   - component: {fileID: 7957334534269693225}
   - component: {fileID: 9094817583912477734}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,14 +191,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 887680496536319740}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &7957334534269693225
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 5367111890652057399}
   - component: {fileID: 2291311087452312822}
   - component: {fileID: 2763249974850234991}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,14 +274,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114119633026329215}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &2291311087452312822
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -343,13 +343,13 @@ GameObject:
   - component: {fileID: 2892807902302129839}
   - component: {fileID: 3669217892660955523}
   - component: {fileID: 2106907521089985004}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2892807902302129839
 Transform:
   m_ObjectHideFlags: 0
@@ -484,8 +484,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7f7ba7fdfd5834287ca9cc5b8e0f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 2
+  weaponSO: {fileID: 11400000, guid: 2b1bb9307f4e07342b68194d6572326f, type: 2}
   cameraGO: {fileID: 0}
+  gameManager: {fileID: 0}
   animator: {fileID: 0}
   flashShot: {fileID: 4144540308061110520}
   shotClip: {fileID: 8300000, guid: e749dc2b9f9210a428c6a9d179d5e3a7, type: 3}
@@ -494,19 +495,17 @@ MonoBehaviour:
   redCross: {fileID: 21300000, guid: adb53085daf953040bbd5c5c3e64b7f6, type: 3}
   cameraShake: {fileID: 0}
   trail: {fileID: 1690990362265313826, guid: 2bf857b4ea6116645ad1fc33bcb39282, type: 3}
-  trailGO: {fileID: 0}
+  trailGO: {fileID: 8518478003616492085}
   hitCross: {fileID: 0}
-  weaponDamage: 5
-  bulletSpeed: 100
-  isAutomatic: 1
-  animationLayerIndex: 0
-  maxAmmo: 30
-  maxReserveAmmo: 200
-  reloadTime: 2
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}
-  fireRate: 0.3
+  isAvailable: 0
+  indexPosition: 2
+  photonView: {fileID: 0}
+  layerToIgnore:
+    serializedVersion: 2
+    m_Bits: 4
 --- !u!1 &5251284568278202138
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +517,7 @@ GameObject:
   - component: {fileID: 6984289044590885866}
   - component: {fileID: 8099537076062099997}
   - component: {fileID: 3043386048822546692}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -532,14 +531,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5251284568278202138}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &8099537076062099997
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -601,7 +600,7 @@ GameObject:
   - component: {fileID: 4268155802986100925}
   - component: {fileID: 7919052260517015814}
   - component: {fileID: 5107220530280362272}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,14 +614,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5964488702366822375}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &7919052260517015814
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -684,7 +683,7 @@ GameObject:
   - component: {fileID: 8755977098225727334}
   - component: {fileID: 6004532934279445178}
   - component: {fileID: 4236100246083247251}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,14 +697,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6463846347211851278}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &6004532934279445178
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -767,7 +766,7 @@ GameObject:
   - component: {fileID: 4345610664069317790}
   - component: {fileID: 1449011680729329561}
   - component: {fileID: 747144592020038579}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,14 +780,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6501146590426606093}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &1449011680729329561
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -850,7 +849,7 @@ GameObject:
   - component: {fileID: 4480692393230225249}
   - component: {fileID: 8057288293856714856}
   - component: {fileID: 2159992301659527724}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AR15-LowPoly.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -864,14 +863,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8360268315391548604}
-  m_LocalRotation: {x: 0, y: 0.7072302, z: 0.7069834, w: 0}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 22.000004, y: 22.000004, z: 22.000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -89.98, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &8057288293856714856
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -931,7 +930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 867373411541946916}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TrailGO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -945,14 +944,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8518478003616492085}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.13, z: 0.672}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0.012, y: 0.096, z: -0.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2892807902302129839}
   m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &5098454735566644024
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -974,6 +973,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FlashShot
+      objectReference: {fileID: 0}
+    - target: {fileID: 109765132778113455, guid: 6d163b03192606f46a2ab64667097339,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1344074896387623352, guid: 6d163b03192606f46a2ab64667097339,
         type: 3}
@@ -1049,6 +1053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988143995601858683, guid: 6d163b03192606f46a2ab64667097339,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d163b03192606f46a2ab64667097339, type: 3}

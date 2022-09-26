@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 
 public class ZombieManager : MonoBehaviour
@@ -20,14 +21,13 @@ public class ZombieManager : MonoBehaviour
     float counter = 0;
 
 
-    [HideInInspector] public GameManager gameManager;
+    public GameManager gameManager;
 
     //Animations
     public Animator animator;
     string dieAnimationTrigger = "isDead";
     void Start()
     {
-        gameManager = GameManager.sharedInstance;
         zombieController = GetComponent<ZombieController>();
         currentHealth = maxHealth;
         isAlive = true;
@@ -37,23 +37,38 @@ public class ZombieManager : MonoBehaviour
     }
     private void Update()
     {
-        if (gameManager.CurrentGameState == GameState.inGame)
+        if (PhotonNetwork.InRoom)
         {
-
-            HPSlider.transform.LookAt(zombieController.playerTarget.transform);
-
-            if (counter >= CDGrowlTime && !audioSource.isPlaying && isAlive)
+            if (PhotonNetwork.IsMasterClient)
             {
-                Growl();
+                if (gameManager.CurrentLocalGameState == GameState.inGame)
+                {
+                    GrowlAndRotateZombie();
+                }
             }
-            counter += Time.deltaTime;
         }
+        else
+        {
+            if (gameManager.CurrentLocalGameState == GameState.inGame)
+            {
+                GrowlAndRotateZombie();
+            }
+        }
+    }
+    void GrowlAndRotateZombie()
+    {
+        HPSlider.transform.LookAt(zombieController.playerTarget.transform);
 
-
+        if (counter >= CDGrowlTime && !audioSource.isPlaying && isAlive)
+        {
+            Growl();
+        }
+        counter += Time.deltaTime;
     }
 
     // Start is called before the first frame update
 
+    [PunRPC]
     public void TakeDamage(float damageAmmount)
     {
         currentHealth -= damageAmmount;
@@ -69,7 +84,8 @@ public class ZombieManager : MonoBehaviour
         HPSlider.gameObject.SetActive(false);
         animator.SetTrigger(dieAnimationTrigger);
         _collider.enabled = false;
-        gameManager.StartCoroutine(gameManager.LookForEnemies());
+        if ((PhotonNetwork.IsMasterClient && PhotonNetwork.InRoom) || !PhotonNetwork.InRoom)
+            gameManager.LookForEnemies();
         Destroy(gameObject, 3);
     }
     void Growl()

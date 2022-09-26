@@ -5,14 +5,15 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public enum GameState
 {
     inGame, pause, gameOver, menu, shop
 }
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
-    public static GameManager sharedInstance;
     [SerializeField] int maxFrames = 90;
     [SerializeField] GameObject[] spawners;
     int currentRound;
@@ -28,29 +29,17 @@ public class GameManager : MonoBehaviour
 
     //Depending on whitch platform we are on, we load one or other scene.
     [SerializeField] string menuScene, mainScene;
-
-    bool gamePaused;
     [SerializeField] GameObject pausePanel;
 
     //Black panel used for fade in when the game starts
     [SerializeField] GameObject fadeInGamePanel;
-    GameState currentGameState;
-    public GameState CurrentGameState { get => currentGameState; }
+    GameState currentLocalGameState;
+    public GameState CurrentLocalGameState { get => currentLocalGameState; }
+    public GameState currentOnlineGameState;
     [HideInInspector] public VendingMachine vendingMachine;
 
-    [SerializeField] PhotonView photonView;
-
-    private void Awake()
-    {
-        if (sharedInstance == null)
-        {
-            sharedInstance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    [SerializeField] PhotonView _photonView;
+    bool isOnlineMasterAndMine;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,21 +50,24 @@ public class GameManager : MonoBehaviour
     }
     void StartGame()
     {
-        currentGameState = GameState.inGame;
+        currentLocalGameState = GameState.inGame;
         StartCoroutine(FadeInOrOutPanel(fadeInGamePanel, 3, false, false));
-        StartCoroutine(StartNextRound());
+        isOnlineMasterAndMine = PhotonNetwork.InRoom && _photonView.IsMine && PhotonNetwork.IsMasterClient;
+        if (!PhotonNetwork.InRoom || isOnlineMasterAndMine)
+            StartCoroutine(StartNextRound());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        if (PhotonNetwork.InRoom && !_photonView.IsMine)
         {
             return;
         }
         if (Input.GetButtonDown("Pause"))
         {
-            switch (currentGameState)
+            switch (currentLocalGameState)
             {
                 case GameState.pause:
                     Resume(); break;
@@ -95,40 +87,87 @@ public class GameManager : MonoBehaviour
         Debug.Log("SetRound");
     }
 
-    IEnumerator StartNextRound()
+    public IEnumerator StartNextRound()
     {
         //TODO: Animation and sound changing roung
-        yield return new WaitForSeconds(3);
-        SetRound(currentRound + 1);
+        Debug.Log("StartNextRound");
+        if (PhotonNetwork.InRoom)
+        {
+            Hashtable localPlayerOptions = new Hashtable();
+            localPlayerOptions.Add("currentRound", currentRound + 1);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(localPlayerOptions);
+        }
+        else
+            SetRound(currentRound + 1);
+        yield return new WaitForSeconds(2);
+
         for (int i = 0; i < currentRound; i++)
         {
+            Debug.Log("i = " + i);
             int randomSpawnIndex = Random.Range(0, spawners.Length);
             Debug.Log(randomSpawnIndex + " RandomSpawnIndex " + spawners.Length);
 
-            GameObject enemy = Instantiate(zombiePrefab, spawners[randomSpawnIndex].transform.position,
+            //Photon network instantiation or normal one
+            if (PhotonNetwork.InRoom)
+                InstantiateZombie(true, randomSpawnIndex);
+            else
+                InstantiateZombie(false, randomSpawnIndex);
+        }
+    }
+
+    public void InstantiateZombie(bool isOnline, int spawnIndex)
+    {
+        if (isOnline)
+        {
+            //Instantiate a zombie in photon network
+            //Add this game manager to the zombie
+            GameObject onlineEnemy = PhotonNetwork.Instantiate("Zombie", spawners[spawnIndex].transform.position,
             Quaternion.identity);
+            if (onlineEnemy != null)
+                onlineEnemy.GetComponent<ZombieManager>().gameManager = this;
+        }
+        else
+        {
+            //Normal instantiation of the zombie if we are not online
+            GameObject enemy = Instantiate(Resources.Load("Zombie"), spawners[spawnIndex].transform.position,
+            Quaternion.identity) as GameObject;
             if (enemy != null)
                 enemy.GetComponent<ZombieManager>().gameManager = this;
         }
     }
 
     //TODO: Change round animation
-    public IEnumerator LookForEnemies()
+    public void LookForEnemies()
     {
-        yield return new WaitForSeconds(3.2f);
-        GameObject[] enemiesAlive = GameObject.FindGameObjectsWithTag("Enemy");
-
-        if (enemiesAlive.Length == 0)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        bool areEnemiesAlive = false;
+        foreach (GameObject enemy in enemies)
         {
-            StartCoroutine(StartNextRound());
+            ZombieManager zombieManager = enemy.GetComponent<ZombieManager>();
+            if (zombieManager != null && zombieManager.isAlive)
+                areEnemiesAlive = true;
         }
+
+        if (!areEnemiesAlive)
+        {
+            Debug.Log("No more enemies alive " + isOnlineMasterAndMine + "inRoom: " + PhotonNetwork.InRoom
+            + " isMaster: " + PhotonNetwork.IsMasterClient + " isMine " + photonView.IsMine);
+            if (!PhotonNetwork.InRoom || (isOnlineMasterAndMine))
+                StartCoroutine(StartNextRound());
+        }
+
     }
 
     public void GameOver()
     {
-        currentGameState = GameState.gameOver;
-        roundsSurvivedText.text = $"ROUNDS SURVIVED: {currentRound}";
+        if (!PhotonNetwork.InRoom)
+        {
+            currentLocalGameState = GameState.gameOver;
+            StartCoroutine(FadeInOrOutPanel(gameOverPanel, 2, true, true));
+
+        }
         StartCoroutine(FadeInOrOutPanel(gameOverPanel, 2, true, true));
+        roundsSurvivedText.text = $"ROUNDS SURVIVED: {currentRound}";
     }
 
     IEnumerator FadeInOrOutPanel(GameObject panel, float time, bool fadeIn, bool stopTime)
@@ -156,7 +195,8 @@ public class GameManager : MonoBehaviour
 
         if (stopTime)
         {
-            Time.timeScale = 0;
+            if (!PhotonNetwork.InRoom)
+                Time.timeScale = 0;
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -165,34 +205,41 @@ public class GameManager : MonoBehaviour
     {
 
         Time.timeScale = 1;
-        currentGameState = GameState.pause;
+        currentLocalGameState = GameState.pause;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void GoToMenu()
     {
-        Time.timeScale = 1;
-        currentGameState = GameState.menu;
+        if (!PhotonNetwork.InRoom)
+        {
+            Time.timeScale = 1;
+        }
+        PhotonNetwork.Disconnect();
+        currentLocalGameState = GameState.menu;
         SceneManager.LoadScene(menuScene);
     }
 
     void Pause()
     {
         Cursor.lockState = CursorLockMode.None;
-        currentGameState = GameState.pause;
-        Time.timeScale = 0;
+        currentLocalGameState = GameState.pause;
+        if (!PhotonNetwork.InRoom)
+        {
+            Time.timeScale = 0;
+        }
         pausePanel.SetActive(true);
     }
     public void Shop()
     {
         Cursor.lockState = CursorLockMode.None;
-        currentGameState = GameState.shop;
-        Debug.Log(currentGameState);
+        currentLocalGameState = GameState.shop;
+        Debug.Log(currentLocalGameState);
     }
     public void Resume()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        currentGameState = GameState.inGame;
+        currentLocalGameState = GameState.inGame;
         Time.timeScale = 1;
         pausePanel.SetActive(false);
     }
@@ -200,4 +247,31 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    [PunRPC]
+    void DestroyPlayerGO()
+    {
+        Destroy(this.gameObject);
+    }
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if (photonView.IsMine && changedProps["currentRound"] != null)
+            SetRound((int)changedProps["currentRound"]);
+    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (otherPlayer.IsLocal)
+            photonView.RPC("DestroyPlayerGO", RpcTarget.All);
+    }
+
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            LookForEnemies();
+        }
+    }
 }
+
+

@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    GameManager gameManager;
+    [SerializeField] GameManager gameManager;
 
-    private void Start()
-    {
-        gameManager = GameManager.sharedInstance;
-    }
+
     public IEnumerator Shake(float shakeDuration, float magnitude)
     {
         float elapsed = 0.0f;
         Quaternion originalRotation = transform.localRotation;
 
-        while (elapsed < shakeDuration && gameManager.CurrentGameState == GameState.inGame)
+        while (elapsed < shakeDuration && gameManager.CurrentLocalGameState == GameState.inGame)
         {
 
             float xShake = Random.Range(-1, 1) * magnitude;

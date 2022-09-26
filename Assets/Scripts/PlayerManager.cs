@@ -6,6 +6,7 @@ using System.Linq;
 using Photon.Pun;
 public class PlayerManager : MonoBehaviour
 {
+    public static GameObject LocalPlayerInstance;
     public float currentHealth = 100;
 
     public float maximumHealth = 100;
@@ -14,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     public bool isAlive;
     [SerializeField] CameraShake cameraShake;
 
-    GameManager gameManager;
+    [SerializeField] GameManager gameManager;
 
     [SerializeField] CanvasGroup takeDamageCG;
     [SerializeField] float damagedBlinkTime = 0.5f;
@@ -28,11 +29,15 @@ public class PlayerManager : MonoBehaviour
     int currentWeaponIndex;
     VendingMachine vendingMachine;
 
-    [SerializeField] PhotonView photonView;
+    public PhotonView photonView;
+
+    private void Awake()
+    {
+        if (photonView.IsMine)
+            LocalPlayerInstance = this.gameObject;
+    }
     void Start()
     {
-        gameManager = GameManager.sharedInstance;
-
         //All weapons are deactivated by default except pistol.
         //When we buy a weapon we make it available
         currentWeaponIndex = 0;
@@ -42,7 +47,6 @@ public class PlayerManager : MonoBehaviour
         currentHealth = maximumHealth;
         healthTMP.text = $"HP: {currentHealth.ToString()}";
         isAlive = true;
-
     }
 
     // Update is called once per frame
@@ -58,7 +62,7 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        if (gameManager.CurrentGameState == GameState.inGame)
+        if (gameManager.CurrentLocalGameState == GameState.inGame)
         {
             CheckMouseWheelInput();
         }
@@ -67,9 +71,11 @@ public class PlayerManager : MonoBehaviour
         if (vendingMachine != null)
         {
             if (Input.GetKeyDown(KeyCode.E) && !vendingMachine.isShopOpen)
+            {
+                Debug.Log(vendingMachine.isShopOpen);
                 vendingMachine.OpenShop(this);
-            else if (Input.GetKeyDown(KeyCode.E) && vendingMachine.isShopOpen)
-                vendingMachine.ExitShop();
+            }
+
         }
 
 
@@ -78,6 +84,7 @@ public class PlayerManager : MonoBehaviour
     {
         healthTMP.text = $"HP: {currentHealth.ToString()}";
     }
+[PunRPC]
     public void TakeDamage(float damage)
     {
 

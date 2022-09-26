@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour
     //Components
     public WeaponSO weaponSO;
     [SerializeField] GameObject cameraGO;
-    GameManager gameManager;
+    [SerializeField] GameManager gameManager;
     [SerializeField] Animator animator;
     [SerializeField] ParticleSystem flashShot;
     AudioSource audioSource;
@@ -69,10 +69,12 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] PhotonView photonView;
 
+    //Layer to ignore on shooting
+    public LayerMask layerToIgnore;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        gameManager = GameManager.sharedInstance;
         currentAmmo = weaponSO.maxAmmo;
         currentReserveAmmo = weaponSO.maxReserveAmmo;
         hitCrossScript = hitCross.GetComponent<HitCross>();
@@ -87,16 +89,16 @@ public class Weapon : MonoBehaviour
         {
             return;
         }
-        
+
         SetAmmoText();
-        if (gameManager.CurrentGameState == GameState.inGame)
+        if (gameManager.CurrentLocalGameState == GameState.inGame)
         {
             //Reset the shoot bool to false
             animator.SetBool(animationShoot, false);
 
             //Raycast from the player to forward.
             hittingSomething = Physics.Raycast(cameraGO.transform.position,
-             cameraGO.transform.forward, out hit, range);
+             cameraGO.transform.forward, out hit, range, ~layerToIgnore);
 
             if (hittingSomething)
             {
@@ -184,7 +186,10 @@ public class Weapon : MonoBehaviour
                     totalDamage *= weaponSO.weaponType == WeaponType.machinegun ? 1.5f : 2;
 
                 //Make damage to the enemy
-                enemyManager.TakeDamage(totalDamage);
+                if (PhotonNetwork.InRoom && photonView.IsMine)
+                    enemyManager.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, totalDamage);
+                else if (!PhotonNetwork.InRoom)
+                    enemyManager.TakeDamage(totalDamage);
                 Debug.Log(totalDamage);
 
 

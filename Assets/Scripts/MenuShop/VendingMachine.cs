@@ -2,21 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class VendingMachine : MonoBehaviour
+using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+public class VendingMachine : MonoBehaviourPunCallbacks
 {
+    ExitGames.Client.Photon.Hashtable hash = new ExitGames.Client.Photon.Hashtable();
     [SerializeField] GameObject shopCanvas;
-    GameManager gameManager;
+    [SerializeField] GameManager gameManager;
     [SerializeField] GameObject doText;
     [SerializeField] GameObject firstSelectedButton;
     public bool isShopOpen = false;
     public PlayerManager _playerManager;
     public ShopSlot selectedShopSlot;
     EventSystem eventSystem;
+    string isShopOpenKey = "isShopOpen";
     private void Start()
     {
-        gameManager = GameManager.sharedInstance;
         eventSystem = EventSystem.current;
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,25 +30,39 @@ public class VendingMachine : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        ExitShop();
         doText.SetActive(false);
     }
 
     public void OpenShop(PlayerManager playerManager)
     {
+        if (hash.ContainsKey(isShopOpenKey))
+        {
+            hash[isShopOpenKey] = true;
+        }
+        else
+            hash.Add(isShopOpenKey, true);
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        gameManager = playerManager.gameObject.GetComponentInChildren<GameManager>();
         _playerManager = playerManager;
         Debug.Log("OpeningShop");
         shopCanvas.SetActive(true);
         eventSystem.SetSelectedGameObject(firstSelectedButton);
-        isShopOpen = true;
         gameManager.Shop();
     }
 
     public void ExitShop()
     {
+        if (hash.ContainsKey(isShopOpenKey))
+        {
+            hash[isShopOpenKey] = false;
+        }
+        else
+            hash.Add(isShopOpenKey, false);
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         Debug.Log("Close shop");
         shopCanvas.SetActive(false);
-        isShopOpen = false;
         gameManager.Resume();
     }
 
@@ -85,6 +104,16 @@ public class VendingMachine : MonoBehaviour
     public void BuyAmmo()
     {
         _playerManager.BuyAmmo();
+    }
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps[isShopOpenKey] != null)
+        {
+            isShopOpen = (bool)changedProps[isShopOpenKey];
+            doText.GetComponent<Text>().text = isShopOpen ? "Shop in use" : "Press E";
+
+            Debug.Log(" isShopOpen = " + isShopOpen);
+        }
     }
 }
 

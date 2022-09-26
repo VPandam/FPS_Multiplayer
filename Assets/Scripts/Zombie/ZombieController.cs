@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class ZombieController : MonoBehaviour
+public class ZombieController : MonoBehaviourPunCallbacks
 {
     public GameObject playerTarget;
+    public GameObject[] playerTargets;
     Vector3 target;
     float distanceToPlayer;
     NavMeshAgent navMeshAgent;
@@ -20,8 +23,7 @@ public class ZombieController : MonoBehaviour
 
 
 
-    [SerializeField]
-    float rangeToMove = 16;
+    [SerializeField] float rangeToMove = 16;
 
     //Stats
     [SerializeField]
@@ -49,8 +51,11 @@ public class ZombieController : MonoBehaviour
     void Start()
     {
         zombieManager = gameObject.GetComponent<ZombieManager>();
+        if (PhotonNetwork.InRoom)
+            playerTargets = GameObject.FindGameObjectsWithTag("Player");
+        else
+            playerTarget = GameObject.FindGameObjectWithTag("Player");
 
-        playerTarget = GameObject.FindGameObjectWithTag("Player");
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = Random.Range(minMovementSpeed, maxMovementSpeed);
         maxSpeed = navMeshAgent.speed;
@@ -63,8 +68,26 @@ public class ZombieController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //If we are online we check which player is the closest to the zombie
+        if (PhotonNetwork.InRoom)
+        {
+            float minDistanceToPlayer = float.MaxValue;
+            foreach (GameObject player in playerTargets)
+            {
+                if (player != null)
+                {
+                    float distance = Vector3.Distance(transform.position, player.transform.position);
+                    if (distance < minDistanceToPlayer)
+                    {
+                        minDistanceToPlayer = distance;
+                        playerTarget = player;
+                    }
+                }
+            }
+        }
         //In order to move the enemy even when the player is jumping, we set the target vector y to 0.
         target = new Vector3(playerTarget.transform.position.x, 0, playerTarget.transform.position.z);
+
         distanceToPlayer = Vector3.Distance(transform.position, target);
         isInRangeToMove = (distanceToPlayer < rangeToMove);
         isInRangeToAttack = distanceToPlayer <= rangeToAttack;
@@ -126,6 +149,11 @@ public class ZombieController : MonoBehaviour
     public void MakeDamage()
     {
         if (distanceToPlayer <= rangeToAttack + armLength)
-            playerTarget.GetComponent<PlayerManager>().TakeDamage(attackDamage);
+            playerTarget.GetComponent<PlayerManager>().photonView.RPC("TakeDamage", RpcTarget.All,
+            attackDamage);
+    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        playerTargets = GameObject.FindGameObjectsWithTag("Player");
     }
 }
