@@ -149,8 +149,13 @@ public class ZombieController : MonoBehaviourPunCallbacks
     public void MakeDamage()
     {
         if (distanceToPlayer <= rangeToAttack + armLength)
-            playerTarget.GetComponent<PlayerManager>().photonView.RPC("TakeDamage", RpcTarget.All,
-            attackDamage);
+        {
+            if (PhotonNetwork.InRoom)
+                playerTarget.GetComponent<PlayerManager>().photonView.RPC("TakeDamage", RpcTarget.All,
+                attackDamage);
+            else
+                playerTarget.GetComponent<PlayerManager>().TakeDamage(attackDamage);
+        }
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {

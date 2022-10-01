@@ -19,5 +19,9 @@ public class WeaponSO : Item
     //The index of the animation layer we use when enabling this weapon.
     public int animationLayerIndex;
 
+    public AudioClip shotClip;
+    public AudioClip[] rechargeClips;
+
+
 
 }

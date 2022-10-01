@@ -84,7 +84,8 @@ public class PlayerManager : MonoBehaviour
     {
         healthTMP.text = $"HP: {currentHealth.ToString()}";
     }
-[PunRPC]
+    
+    [PunRPC]
     public void TakeDamage(float damage)
     {
 

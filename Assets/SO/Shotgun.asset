@@ -23,3 +23,7 @@ MonoBehaviour:
   maxReserveAmmo: 99
   reloadTime: 3
   animationLayerIndex: 4
+  shotClip: {fileID: 8300000, guid: cf6ff50db29f9f3419acb0af8c408a3d, type: 3}
+  rechargeClips:
+  - {fileID: 8300000, guid: 46e40a39df4209849b00644f20a18bfd, type: 3}
+  - {fileID: 8300000, guid: 41d8edde2b3126e4baae02be18fabf8b, type: 3}

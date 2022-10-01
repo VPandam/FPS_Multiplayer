@@ -4095,7 +4095,7 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: shoot
   - Type: 4
     SynchronizeType: 1
@@ -4110,15 +4110,15 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: isUsingRifle
   m_SynchronizeLayers:
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 1
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 2
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 3
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 4
 --- !u!1 &8746376247370416617
 GameObject:
@@ -4455,6 +4455,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Pistol
+      objectReference: {fileID: 0}
+    - target: {fileID: 740057036687500111, guid: c71c805536c78694c95347ba2c57c816,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c71c805536c78694c95347ba2c57c816, type: 3}
@@ -4892,6 +4897,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Machinegun
+      objectReference: {fileID: 0}
+    - target: {fileID: 2553120808957973525, guid: 77568649a3d50bd41a1f193c6c4bdfff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2892807902302129839, guid: 77568649a3d50bd41a1f193c6c4bdfff,
         type: 3}

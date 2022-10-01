@@ -16,7 +16,6 @@ public class Weapon : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] ParticleSystem flashShot;
     AudioSource audioSource;
-    [SerializeField] AudioClip shotClip;
 
     //Canvas
     [SerializeField] Image aimCross;
@@ -56,9 +55,9 @@ public class Weapon : MonoBehaviour
 
     public bool isReloading;
     [SerializeField] TextMeshProUGUI currentAmmoText, reserveAmmoText;
-
     //ShootRatio
     float nextShootTime;
+
 
     //True when we bought the weapon in the shop
     public bool isAvailable;
@@ -71,6 +70,9 @@ public class Weapon : MonoBehaviour
 
     //Layer to ignore on shooting
     public LayerMask layerToIgnore;
+
+    //AudioClips
+
 
     void Start()
     {
@@ -107,7 +109,7 @@ public class Weapon : MonoBehaviour
             }
 
             //Reload when our current ammo is 0.
-            if ((currentAmmo <= 0 && !isReloading) ||
+            if ((currentAmmo <= 0 && !isReloading && currentReserveAmmo > 0) ||
             (currentAmmo < weaponSO.maxAmmo && !isReloading && Input.GetButtonDown(reloadButton)))
             {
                 StartCoroutine(Reload());
@@ -145,7 +147,8 @@ public class Weapon : MonoBehaviour
         cameraShake.StartCoroutine(cameraShake.Shake(0.1f, 0.2f));
 
         //Audio shot effect
-        audioSource.PlayOneShot(shotClip, 0.5f);
+        if (weaponSO.shotClip)
+            audioSource.PlayOneShot(weaponSO.shotClip, 0.5f);
 
         //Light effect on shoot
         flashShot.Play();
@@ -283,14 +286,28 @@ public class Weapon : MonoBehaviour
 
     IEnumerator Reload()
     {
-
         //Unable the aim cross
         aimCross.enabled = false;
 
         isReloading = true;
         animator.SetBool(animationReload, true);
+
+        PlayRechargeSounds();
+        //The time to wait for recharge of the shotgun depends on how many bullets
+        //we have left. The EndReload call is made when we finish playing the recharge sounds
+        if (weaponSO.weaponType != WeaponType.shotgun)
+        {
+            yield return new WaitForSeconds(weaponSO.reloadTime);
+            EndReload();
+        }
+    }
+
+    /// <summary>
+    /// Ends the reloading animation and set the current ammo.
+    /// </summary>
+    public void EndReload()
+    {
         //Wait for seconds equal to the reload time variable
-        yield return new WaitForSeconds(weaponSO.reloadTime);
         isReloading = false;
         //enable the aim cross once we have finished reloading.
         aimCross.enabled = true;
@@ -298,8 +315,6 @@ public class Weapon : MonoBehaviour
         AimSystem();
 
         animator.SetBool(animationReload, false);
-
-
 
         //Ammount of bullets to substra to reserve ammo in order to have the max current ammo
         int ammountToReload = weaponSO.maxAmmo - currentAmmo;
@@ -317,8 +332,10 @@ public class Weapon : MonoBehaviour
             currentAmmo = currentReserveAmmo;
             currentReserveAmmo = 0;
         }
-
     }
+    /// <summary>
+    /// Stops the reload coroutine 
+    /// </summary>
     public void CancelReload()
     {
         StopCoroutine("Reload");
@@ -327,7 +344,7 @@ public class Weapon : MonoBehaviour
         aimCross.enabled = true;
         //Checks if we are aiming to chose the next animation
         AimSystem();
-        //Set the irReloading parameter to false
+        //Set the Reloading parameter to false
         animator.SetBool(animationReload, false);
 
     }
@@ -355,6 +372,57 @@ public class Weapon : MonoBehaviour
         currentReserveAmmo = weaponSO.maxReserveAmmo;
     }
 
+    /// <summary>
+    /// Depending on the gun we play one or more clips to reload
+    /// If we play more than one, we use a coroutine to play them one by one.
+    /// </summary>
+    public void PlayRechargeSounds()
+    {
+        AudioClip[] rechargeClips;
+        rechargeClips = weaponSO.rechargeClips;
+        if (rechargeClips.Length > 0)
+        {
+            if (rechargeClips.Length == 1)
+            {
+                audioSource.PlayOneShot(rechargeClips[0], 0.5f);
+            }
+            else
+            {
+                StartCoroutine(Playsounds(rechargeClips, audioSource));
+            }
+        }
+        else
+        {
+            return;
+        }
+    }
 
+    public IEnumerator Playsounds(AudioClip[] audioClips, AudioSource audioSource)
+    {
+        //For the shotgun we need to play one recharge sound for each bullet
+        if (weaponSO.weaponType == WeaponType.shotgun)
+        {
+
+            audioSource.PlayOneShot(audioClips[0], 0.5f);
+            yield return new WaitForSeconds(audioClips[0].length);
+
+            for (int x = 0; x < weaponSO.maxAmmo - currentAmmo; x++)
+            {
+                audioSource.PlayOneShot(audioClips[1], 0.5f);
+                yield return new WaitForSeconds(audioClips[1].length);
+            }
+            EndReload();
+        }
+        //If our active gun is not a shotgun
+        else
+        {
+            //Play them one by one
+            for (int i = 0; i < audioClips.Length; i++)
+            {
+                audioSource.PlayOneShot(audioClips[i], 0.5f);
+                yield return new WaitForSeconds(audioClips[i].length);
+            }
+        }
+    }
 
 }

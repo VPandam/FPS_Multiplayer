@@ -54,7 +54,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         StartCoroutine(FadeInOrOutPanel(fadeInGamePanel, 3, false, false));
         isOnlineMasterAndMine = PhotonNetwork.InRoom && _photonView.IsMine && PhotonNetwork.IsMasterClient;
         if (!PhotonNetwork.InRoom || isOnlineMasterAndMine)
+        {
+            if (!PhotonNetwork.InRoom)
+                PhotonNetwork.OfflineMode = true;
             StartCoroutine(StartNextRound());
+        }
 
     }
 

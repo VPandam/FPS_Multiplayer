@@ -702,7 +702,7 @@ MonoBehaviour:
   playerTargets: []
   animator: {fileID: 2898793812981327159}
   rangeToMove: 190
-  attackDamage: 0
+  attackDamage: 10
   minMovementSpeed: 3
   maxMovementSpeed: 5
   minAttackSpeed: 1
