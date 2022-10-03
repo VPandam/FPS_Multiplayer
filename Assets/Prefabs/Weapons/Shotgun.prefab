@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1997013654039685434
 Transform:
   m_ObjectHideFlags: 0
@@ -235,10 +235,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSO: {fileID: 11400000, guid: 8f264e3a82843d349abf0fcb79b89cd7, type: 2}
   cameraGO: {fileID: 0}
+  mainCamera: {fileID: 0}
   gameManager: {fileID: 0}
   animator: {fileID: 0}
   flashShot: {fileID: 1336730573312863291}
-  shotClip: {fileID: 8300000, guid: e749dc2b9f9210a428c6a9d179d5e3a7, type: 3}
   aimCross: {fileID: 0}
   normalCross: {fileID: 21300000, guid: ee6b7ca0c3bb6674c95e44f898d774f1, type: 3}
   redCross: {fileID: 21300000, guid: adb53085daf953040bbd5c5c3e64b7f6, type: 3}
@@ -246,6 +246,7 @@ MonoBehaviour:
   trail: {fileID: 1690990362265313826, guid: 2bf857b4ea6116645ad1fc33bcb39282, type: 3}
   trailGO: {fileID: 3466473957845979209}
   hitCross: {fileID: 0}
+  scopeOverlay: {fileID: 0}
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}

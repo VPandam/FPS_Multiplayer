@@ -25,15 +25,32 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
             SubmitUserName();
         }
     }
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
     public void StartOnlineGame()
     {
-        PhotonNetwork.LoadLevel("MainOnline");
+        PhotonNetwork.LoadLevel("Main");
     }
     public void MainToUserName()
     {
         mainPanel.SetActive(false);
         usernamePanel.SetActive(true);
         onUserNameScreen = true;
+    }
+    public void LobbyToMain()
+    {
+        mainPanel.SetActive(true);
+        lobbyPanel.SetActive(false);
+        PhotonNetwork.Disconnect();
+        onUserNameScreen = false;
+    }
+    public void UserNameToMain()
+    {
+        mainPanel.SetActive(true);
+        usernamePanel.SetActive(false);
+        onUserNameScreen = false;
     }
     public void SubmitUserName()
     {

@@ -5,16 +5,19 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
 
-public enum WeaponType { pistol, rifle, machinegun, shotgun }
+public enum WeaponType { pistol, rifle, machinegun, shotgun, sniper }
 public class Weapon : MonoBehaviour
 {
 
     //Components
     public WeaponSO weaponSO;
     [SerializeField] GameObject cameraGO;
+    [SerializeField] Camera mainCamera;
+    float mainCameraFOV;
     [SerializeField] GameManager gameManager;
     [SerializeField] Animator animator;
     [SerializeField] ParticleSystem flashShot;
+    MeshRenderer weaponMeshRenderer;
     AudioSource audioSource;
 
     //Canvas
@@ -24,6 +27,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] TrailRenderer trail;
     [SerializeField] GameObject trailGO;
     [SerializeField] GameObject hitCross;
+    [SerializeField] GameObject scopeOverlay;
     HitCross hitCrossScript;
 
 
@@ -63,7 +67,7 @@ public class Weapon : MonoBehaviour
     public bool isAvailable;
 
     //Index of the position in the weapon holder
-    [HideInInspector] public int indexPosition;
+    public int indexPosition;
 
 
     [SerializeField] PhotonView photonView;
@@ -74,13 +78,19 @@ public class Weapon : MonoBehaviour
     //AudioClips
 
 
+    public void SetIndexPosition()
+    {
+        indexPosition = ((int)weaponSO.weaponType);
+    }
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         currentAmmo = weaponSO.maxAmmo;
         currentReserveAmmo = weaponSO.maxReserveAmmo;
         hitCrossScript = hitCross.GetComponent<HitCross>();
-        indexPosition = ((int)weaponSO.weaponType);
+        weaponMeshRenderer = GetComponent<MeshRenderer>();
+        mainCamera = cameraGO.GetComponentInChildren<Camera>();
+        mainCameraFOV = mainCamera.fieldOfView;
     }
 
 
@@ -122,6 +132,8 @@ public class Weapon : MonoBehaviour
                 //Called on update to check if we are hitting the Aim button, if so, change to aim mode.
                 AimSystem();
 
+                //Check if the fire rate of the weapon allows us to shoot. If the weapon is automatic we can let 
+                //the button pressed to shoot over and over.
                 if (Input.GetButton(fire1) && Time.time >= nextShootTime && weaponSO.isAutomatic)
                 {
                     Shoot();
@@ -131,6 +143,7 @@ public class Weapon : MonoBehaviour
                     Shoot();
                 }
             }
+
         }
     }
 
@@ -172,21 +185,7 @@ public class Weapon : MonoBehaviour
             //If we hit an enemy
             if (enemyManager != null && enemyManager.isAlive)
             {
-                float totalDamage = weaponSO.weaponDamage;
-
-                //If we are using a shotgun we make double damage if the enemy is close
-                if (weaponSO.weaponType == WeaponType.shotgun)
-                {
-                    if (Vector3.Distance(transform.position, enemyManager.transform.position) < 3)
-                    {
-                        totalDamage *= 2;
-                    }
-                }
-
-                //If we make a headshot we double the total damage
-                //Machinegun is so powerfull, so i made headshots half strong
-                if (hit.collider.gameObject.name == "HeadCollider")
-                    totalDamage *= weaponSO.weaponType == WeaponType.machinegun ? 1.5f : 2;
+                float totalDamage = CalculateDamage(enemyManager);
 
                 //Make damage to the enemy
                 if (PhotonNetwork.InRoom && photonView.IsMine)
@@ -204,6 +203,27 @@ public class Weapon : MonoBehaviour
                     hitCross.SetActive(true);
             }
         }
+    }
+
+    //Calculates the damage, depending of the weapon we are using,
+    // the distance, or where do we hit the enemy.
+    float CalculateDamage(ZombieManager enemyManager)
+    {
+        float totalDamage = weaponSO.weaponDamage;
+
+        //If we are using a shotgun we make double damage if the enemy is close
+        if (weaponSO.weaponType == WeaponType.shotgun &&
+        (Vector3.Distance(transform.position, enemyManager.transform.position) < 6))
+        {
+            totalDamage *= 5;
+        }
+
+        //If we make a headshot we double the total damage
+        //Machinegun is so powerfull, so we made headshots half strong
+        if (hit.collider.gameObject.name == "HeadCollider")
+            totalDamage *= weaponSO.weaponType == WeaponType.machinegun ? 1.5f : 2;
+
+        return totalDamage;
     }
 
     IEnumerator MoveTrial(TrailRenderer trailToMove, Vector3 destiny)
@@ -279,9 +299,19 @@ public class Weapon : MonoBehaviour
         else
         {
             animator.SetBool(animationAim, false);
+            if (weaponSO.weaponType == WeaponType.sniper)
+            {
+                StopScoping();
+            }
             isAiming = false;
             aimCross.enabled = true;
         }
+    }
+    void StopScoping()
+    {
+        scopeOverlay.SetActive(false);
+        weaponMeshRenderer.enabled = true;
+        mainCamera.fieldOfView = mainCameraFOV;
     }
 
     IEnumerator Reload()
@@ -289,8 +319,14 @@ public class Weapon : MonoBehaviour
         //Unable the aim cross
         aimCross.enabled = false;
 
+        if (weaponSO.weaponType == WeaponType.sniper)
+        {
+            StopScoping();
+        }
         isReloading = true;
         animator.SetBool(animationReload, true);
+
+        //If we are scoping with the sniper, stop scoping
 
         PlayRechargeSounds();
         //The time to wait for recharge of the shotgun depends on how many bullets

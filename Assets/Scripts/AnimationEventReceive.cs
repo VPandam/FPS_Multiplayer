@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class AnimationEventReceive : MonoBehaviour
 {
-
+    [SerializeField] GameObject scopeOverlay;
+    [SerializeField] GameObject sniperGO;
+    [SerializeField] Camera playerCamera;
     public ZombieController zombieController;
-    
+
     //Called when the animation of the zombie makes him stretch his arm to attack
     public void MakeDamage()
     {
         zombieController.MakeDamage();
+    }
+    public void ScopeOverlay()
+    {
+        scopeOverlay.SetActive(true);
+        sniperGO.GetComponent<MeshRenderer>().enabled = false;
+        playerCamera.fieldOfView = 15;
     }
 }

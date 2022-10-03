@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using Photon.Pun;
@@ -11,7 +12,7 @@ public class PlayerManager : MonoBehaviour
 
     public float maximumHealth = 100;
 
-    [SerializeField] TextMeshProUGUI healthTMP;
+    [SerializeField] Slider healthSlider;
     public bool isAlive;
     [SerializeField] CameraShake cameraShake;
 
@@ -45,7 +46,7 @@ public class PlayerManager : MonoBehaviour
         Debug.Log(currentWeapon + " Current weapon " + weaponHolder.transform.GetChild(currentWeaponIndex).name);
         SetWeaponAvailable(WeaponType.pistol);
         currentHealth = maximumHealth;
-        healthTMP.text = $"HP: {currentHealth.ToString()}";
+        healthSlider.value = 1;
         isAlive = true;
     }
 
@@ -80,11 +81,11 @@ public class PlayerManager : MonoBehaviour
 
 
     }
-    void UpdateHealthText()
+    void UpdateHealth()
     {
-        healthTMP.text = $"HP: {currentHealth.ToString()}";
+        healthSlider.value = (float)currentHealth / (float)maximumHealth;
     }
-    
+
     [PunRPC]
     public void TakeDamage(float damage)
     {
@@ -92,7 +93,7 @@ public class PlayerManager : MonoBehaviour
         cameraShake.StartCoroutine(cameraShake.Shake(0.3f, 0.4f));
         currentHealth = Mathf.Clamp(currentHealth - damage, 0, maximumHealth);
         takeDamageCG.alpha = 1;
-        UpdateHealthText();
+        UpdateHealth();
         if (currentHealth <= 0)
         {
             Die();
@@ -111,13 +112,13 @@ public class PlayerManager : MonoBehaviour
     public void Heal(float healAmmount)
     {
         currentHealth += healAmmount;
-        UpdateHealthText();
+        UpdateHealth();
     }
     public void Heal(bool max)
     {
         if (max)
             currentHealth = maximumHealth;
-        UpdateHealthText();
+        UpdateHealth();
     }
 
     void CheckMouseWheelInput()
@@ -166,6 +167,7 @@ public class PlayerManager : MonoBehaviour
 
     void AddWeaponIndexToAvailable(int indexPosition)
     {
+        Debug.Log("Index position addweaponindextoavailable: " + indexPosition);
         if (!weaponsAvailableIndexes.Contains(indexPosition))
             weaponsAvailableIndexes.Add(indexPosition);
     }
@@ -183,9 +185,11 @@ public class PlayerManager : MonoBehaviour
 
         foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
         {
+            Debug.Log(weapon.gameObject.name);
             if (weapon.weaponSO.weaponType == weaponTypeToSetAvailable)
             {
                 weapon.isAvailable = true;
+                weapon.SetIndexPosition();
                 AddWeaponIndexToAvailable(weapon.indexPosition);
                 ChangeWeapon(weapon.indexPosition);
             }
