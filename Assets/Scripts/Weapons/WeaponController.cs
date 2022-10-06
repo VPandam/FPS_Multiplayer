@@ -11,13 +11,13 @@ public interface IWeapon
 
     //Calculates the damage, depending of the weapon we are using,
     // the distance, or where do we hit the enemy.
-    public float CalculateDamage(WeaponSO weaponSO, ZombieManager enemyManager, RaycastHit hit);
+    public float CalculateDamage(WeaponStats weaponSO, ZombieManager enemyManager, RaycastHit hit);
 };
 public class WeaponController : MonoBehaviour
 {
 
     //Components
-    public WeaponSO weaponSO;
+    public WeaponStats weaponSO;
     [SerializeField] GameObject cameraGO;
     [SerializeField] Camera mainCamera;
     float mainCameraFOV;
@@ -146,11 +146,11 @@ public class WeaponController : MonoBehaviour
 
                 //Check if the fire rate of the weapon allows us to shoot. If the weapon is automatic we can let 
                 //the button pressed to shoot over and over.
-                if (Input.GetButton(fire1) && Time.time >= nextShootTime && weaponSO.isAutomatic)
+                if (Input.GetButton(fire1) && Time.time >= nextShootTime && weaponSO.isAutomatic && currentAmmo > 0)
                 {
                     Shoot();
                 }
-                if (Input.GetButtonDown(fire1) && Time.time >= nextShootTime && !weaponSO.isAutomatic)
+                if (Input.GetButtonDown(fire1) && Time.time >= nextShootTime && !weaponSO.isAutomatic && currentAmmo > 0)
                 {
                     Shoot();
                 }

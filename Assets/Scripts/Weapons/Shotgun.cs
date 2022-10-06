@@ -4,7 +4,7 @@ public class Rifle : MonoBehaviour, IWeapon
 {
     float totalDamage;
 
-    public float CalculateDamage(WeaponSO weaponSO, ZombieManager enemyManager, RaycastHit hit)
+    public float CalculateDamage(WeaponStats weaponSO, ZombieManager enemyManager, RaycastHit hit)
     {
         float baseDamage = weaponSO.weaponDamage;
         totalDamage = baseDamage;

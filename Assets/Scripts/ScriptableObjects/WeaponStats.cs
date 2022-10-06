@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "ItemWeapon"),]
-public class WeaponSO : Item
+public class WeaponStats : Item
 {
 
     public WeaponType weaponType;
