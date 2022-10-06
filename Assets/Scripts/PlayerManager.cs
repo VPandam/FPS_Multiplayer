@@ -24,7 +24,7 @@ public class PlayerManager : MonoBehaviour
 
     //Weapon change
     [SerializeField] GameObject weaponHolder;
-    Weapon currentWeapon;
+    WeaponController currentWeapon;
 
     List<int> weaponsAvailableIndexes = new List<int>();
     int currentWeaponIndex;
@@ -42,7 +42,7 @@ public class PlayerManager : MonoBehaviour
         //All weapons are deactivated by default except pistol.
         //When we buy a weapon we make it available
         currentWeaponIndex = 0;
-        currentWeapon = weaponHolder.transform.GetChild(currentWeaponIndex).GetComponent<Weapon>();
+        currentWeapon = weaponHolder.transform.GetChild(currentWeaponIndex).GetComponent<WeaponController>();
         Debug.Log(currentWeapon + " Current weapon " + weaponHolder.transform.GetChild(currentWeaponIndex).name);
         SetWeaponAvailable(WeaponType.pistol);
         currentHealth = maximumHealth;
@@ -147,9 +147,15 @@ public class PlayerManager : MonoBehaviour
         if (currentWeapon.isReloading)
             currentWeapon.CancelReload();
 
+        if (currentWeapon.isScoping)
+        {
+            currentWeapon.StopScoping();
+            currentWeapon.SetAimMode(false);
+        }
+
 
         //Activate the weapon with the right index and deactivate the others.
-        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
+        foreach (WeaponController weapon in weaponHolder.GetComponentsInChildren<WeaponController>(true))
         {
             if (weaponsAvailableIndex == weapon.indexPosition && weapon.isAvailable)
             {
@@ -183,7 +189,7 @@ public class PlayerManager : MonoBehaviour
     public void SetWeaponAvailable(WeaponType weaponTypeToSetAvailable)
     {
 
-        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
+        foreach (WeaponController weapon in weaponHolder.GetComponentsInChildren<WeaponController>(true))
         {
             Debug.Log(weapon.gameObject.name);
             if (weapon.weaponSO.weaponType == weaponTypeToSetAvailable)
@@ -197,7 +203,7 @@ public class PlayerManager : MonoBehaviour
     }
     public void BuyAmmo()
     {
-        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
+        foreach (WeaponController weapon in weaponHolder.GetComponentsInChildren<WeaponController>(true))
         {
             if (weapon.isAvailable)
             {

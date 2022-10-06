@@ -16,6 +16,8 @@ public class AnimationEventReceive : MonoBehaviour
     }
     public void ScopeOverlay()
     {
+        WeaponController weapon = sniperGO.GetComponent<WeaponController>();
+        if (weapon) weapon.isScoping = true;
         scopeOverlay.SetActive(true);
         sniperGO.GetComponent<MeshRenderer>().enabled = false;
         playerCamera.fieldOfView = 15;

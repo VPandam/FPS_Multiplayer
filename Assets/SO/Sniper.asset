@@ -28,3 +28,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e8cf3dc1d5b101e44bd833f76ba146f3, type: 3}
   - {fileID: 8300000, guid: ba335dbe6f21291438acdc69e5a22f0d, type: 3}
   - {fileID: 8300000, guid: fa6efb6e8db2d524c893d48aa99938e2, type: 3}
+  collateral: 1

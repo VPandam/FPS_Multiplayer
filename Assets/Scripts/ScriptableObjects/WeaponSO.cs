@@ -21,6 +21,7 @@ public class WeaponSO : Item
 
     public AudioClip shotClip;
     public AudioClip[] rechargeClips;
+    public bool collateral;
 
 
 

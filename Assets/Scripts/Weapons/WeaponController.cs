@@ -6,7 +6,14 @@ using TMPro;
 using Photon.Pun;
 
 public enum WeaponType { pistol, rifle, machinegun, shotgun, sniper }
-public class Weapon : MonoBehaviour
+public interface IWeapon
+{
+
+    //Calculates the damage, depending of the weapon we are using,
+    // the distance, or where do we hit the enemy.
+    public float CalculateDamage(WeaponSO weaponSO, ZombieManager enemyManager, RaycastHit hit);
+};
+public class WeaponController : MonoBehaviour
 {
 
     //Components
@@ -53,6 +60,7 @@ public class Weapon : MonoBehaviour
     RaycastHit hit;
     Vector3 targetDirection;
     string enemyTag = "Enemy";
+    public bool isScoping;
 
     //Reload system
     int currentAmmo, currentReserveAmmo;
@@ -74,6 +82,7 @@ public class Weapon : MonoBehaviour
 
     //Layer to ignore on shooting
     public LayerMask layerToIgnore;
+    IWeapon IweaponInterface;
 
     //AudioClips
 
@@ -91,6 +100,13 @@ public class Weapon : MonoBehaviour
         weaponMeshRenderer = GetComponent<MeshRenderer>();
         mainCamera = cameraGO.GetComponentInChildren<Camera>();
         mainCameraFOV = mainCamera.fieldOfView;
+        IweaponInterface = GetComponent<IWeapon>();
+    }
+    private void FixedUpdate()
+    {
+        //Raycast from the player to forward.
+        hittingSomething = Physics.Raycast(cameraGO.transform.position,
+         cameraGO.transform.forward, out hit, range, ~layerToIgnore);
     }
 
 
@@ -107,10 +123,6 @@ public class Weapon : MonoBehaviour
         {
             //Reset the shoot bool to false
             animator.SetBool(animationShoot, false);
-
-            //Raycast from the player to forward.
-            hittingSomething = Physics.Raycast(cameraGO.transform.position,
-             cameraGO.transform.forward, out hit, range, ~layerToIgnore);
 
             if (hittingSomething)
             {
@@ -150,6 +162,7 @@ public class Weapon : MonoBehaviour
 
     void Shoot()
     {
+        ZombieManager enemyManager = null;
         currentAmmo -= 1;
 
         //Calculate next shoot time
@@ -171,60 +184,74 @@ public class Weapon : MonoBehaviour
 
         //Move the trail towards the hitted object
         if (hittingSomething)
+        {
+            enemyManager = hit.transform.gameObject.GetComponent<ZombieManager>();
             StartCoroutine(MoveTrial(trailInstance, hit.point));
+        }
         else
             //Move the trail forwards
             StartCoroutine(MoveTrial(trailInstance, cameraGO.transform.forward * 100));
 
         animator.SetBool(animationShoot, true);
 
-        if (hittingSomething)
+
+        if (enemyManager != null)
         {
-            GameObject gameObjectHitted = hit.transform.gameObject;
-            ZombieManager enemyManager = gameObjectHitted.GetComponent<ZombieManager>();
-            //If we hit an enemy
-            if (enemyManager != null && enemyManager.isAlive)
-            {
-                float totalDamage = CalculateDamage(enemyManager);
 
-                //Make damage to the enemy
-                if (PhotonNetwork.InRoom && photonView.IsMine)
-                    enemyManager.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, totalDamage);
-                else if (!PhotonNetwork.InRoom)
-                    enemyManager.TakeDamage(totalDamage);
-                Debug.Log(totalDamage);
+            DamageTheEnemy(hit, enemyManager, false);
 
+            //Activates a cross that shows we hitted the enemy.
+            //If it is already active, reset the time to disable it
+            if (hitCross.activeSelf)
+                hitCrossScript.RestartDisableCall();
+            else
+                hitCross.SetActive(true);
 
-                //Activates a cross that shows we hitted the enemy.
-                //If it is already active, reset the time to disable it
-                if (hitCross.activeSelf)
-                    hitCrossScript.RestartDisableCall();
-                else
-                    hitCross.SetActive(true);
-            }
+            if (weaponSO.collateral)
+                Collateral();
         }
     }
 
-    //Calculates the damage, depending of the weapon we are using,
-    // the distance, or where do we hit the enemy.
-    float CalculateDamage(ZombieManager enemyManager)
+    /// <summary>
+    /// Make damage to the enemy passed by parameter.
+    /// If call this when a collateral is made, we made half damage.
+    /// </summary>
+    /// <param name="enemyHitted"></param>
+    /// <param name="isCollateral"></param>
+    void DamageTheEnemy(RaycastHit enemyHit, ZombieManager enemyManager, bool isCollateral)
     {
-        float totalDamage = weaponSO.weaponDamage;
 
-        //If we are using a shotgun we make double damage if the enemy is close
-        if (weaponSO.weaponType == WeaponType.shotgun &&
-        (Vector3.Distance(transform.position, enemyManager.transform.position) < 6))
+        //If we hit an enemy
+        if (enemyManager != null && enemyManager.isAlive)
         {
-            totalDamage *= 5;
+
+            //Calculates the damage, depending of the weapon we are using,
+            // the distance, or where do we hit the enemy.
+            float totalDamage = IweaponInterface.CalculateDamage(weaponSO, enemyManager, enemyHit);
+            totalDamage *= isCollateral ? 0.5f : 1;
+
+            //Make damage to the enemy
+            if (PhotonNetwork.InRoom && photonView.IsMine)
+                enemyManager.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, totalDamage);
+            else if (!PhotonNetwork.InRoom)
+                enemyManager.TakeDamage(totalDamage);
+            Debug.Log(totalDamage);
         }
-
-        //If we make a headshot we double the total damage
-        //Machinegun is so powerfull, so we made headshots half strong
-        if (hit.collider.gameObject.name == "HeadCollider")
-            totalDamage *= weaponSO.weaponType == WeaponType.machinegun ? 1.5f : 2;
-
-        return totalDamage;
     }
+
+    /// <summary>
+    /// Throw a new raycast from the position of the last hit and checks if another enemy is hitted.
+    /// If so, damage the enemy.
+    /// </summary>
+    void Collateral()
+    {
+        RaycastHit collateralHit;
+        Physics.Raycast(hit.point, cameraGO.transform.forward, out collateralHit, range, ~layerToIgnore);
+        ZombieManager enemyHitted = collateralHit.transform.gameObject.GetComponent<ZombieManager>();
+        if (enemyHitted != null)
+            DamageTheEnemy(collateralHit, enemyHitted, true);
+    }
+
 
     IEnumerator MoveTrial(TrailRenderer trailToMove, Vector3 destiny)
     {
@@ -288,7 +315,7 @@ public class Weapon : MonoBehaviour
     /// Set needed parameters to consider when changing the aim mode
     /// </summary>
     /// <param name="aimMode">True if aiming, false if not</param>
-    void SetAimMode(bool aimMode)
+    public void SetAimMode(bool aimMode)
     {
         if (aimMode == true)
         {
@@ -307,8 +334,9 @@ public class Weapon : MonoBehaviour
             aimCross.enabled = true;
         }
     }
-    void StopScoping()
+    public void StopScoping()
     {
+        isScoping = false;
         scopeOverlay.SetActive(false);
         weaponMeshRenderer.enabled = true;
         mainCamera.fieldOfView = mainCameraFOV;
