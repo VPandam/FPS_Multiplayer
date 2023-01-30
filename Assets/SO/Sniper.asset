@@ -15,6 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: bb92d3bb6ad058a429d0e621878ca37b, type: 3}
   itemType: 1
   weaponType: 4
+  cost: 1000
   weaponDamage: 30
   bulletSpeed: 100
   isAutomatic: 0

@@ -8,7 +8,6 @@ using Photon.Pun;
 public enum WeaponType { pistol, rifle, machinegun, shotgun, sniper }
 public interface IWeapon
 {
-
     //Calculates the damage, depending of the weapon we are using,
     // the distance, or where do we hit the enemy.
     public float CalculateDamage(WeaponStats weaponSO, ZombieManager enemyManager, RaycastHit hit);
@@ -197,7 +196,6 @@ public class WeaponController : MonoBehaviour
 
         if (enemyManager != null)
         {
-
             DamageTheEnemy(hit, enemyManager, false);
 
             //Activates a cross that shows we hitted the enemy.
@@ -224,18 +222,23 @@ public class WeaponController : MonoBehaviour
         //If we hit an enemy
         if (enemyManager != null && enemyManager.isAlive)
         {
-
             //Calculates the damage, depending of the weapon we are using,
             // the distance, or where do we hit the enemy.
             float totalDamage = IweaponInterface.CalculateDamage(weaponSO, enemyManager, enemyHit);
             totalDamage *= isCollateral ? 0.5f : 1;
 
+            //Update points, if we are hitting a headshot points are 50 else 10.
+            //Instantiate points animation text.
+            PlayerManager localPlayerInstance = PlayerManager.LocalPlayerInstance;
+            if(localPlayerInstance) localPlayerInstance.UpdatePoints(enemyHit.collider.gameObject.CompareTag("Headshot")? 50 : 10);
+            
+            
+            
             //Make damage to the enemy
             if (PhotonNetwork.InRoom && photonView.IsMine)
                 enemyManager.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, totalDamage);
             else if (!PhotonNetwork.InRoom)
                 enemyManager.TakeDamage(totalDamage);
-            Debug.Log(totalDamage);
         }
     }
 

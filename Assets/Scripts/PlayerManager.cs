@@ -5,13 +5,16 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using Photon.Pun;
+using Unity.Mathematics;
+
 public class PlayerManager : MonoBehaviour
 {
-    public static GameObject LocalPlayerInstance;
+    public static PlayerManager LocalPlayerInstance;
+    [SerializeField] private TextMeshProUGUI pointsText;
     public float currentHealth = 100;
 
     public float maximumHealth = 100;
-
+    public int currentPoints;
     [SerializeField] Slider healthSlider;
     public bool isAlive;
     [SerializeField] CameraShake cameraShake;
@@ -29,13 +32,14 @@ public class PlayerManager : MonoBehaviour
     List<int> weaponsAvailableIndexes = new List<int>();
     int currentWeaponIndex;
     VendingMachine vendingMachine;
-
+    [SerializeField] private GameObject pointsPopup, pointsPopupStartPoint;
     public PhotonView photonView;
 
     private void Awake()
     {
-        if (photonView.IsMine)
-            LocalPlayerInstance = this.gameObject;
+        if (photonView.IsMine && PhotonNetwork.InRoom)
+            LocalPlayerInstance = this;
+        else if (!PhotonNetwork.InRoom) LocalPlayerInstance = this;
     }
     void Start()
     {
@@ -48,6 +52,8 @@ public class PlayerManager : MonoBehaviour
         currentHealth = maximumHealth;
         healthSlider.value = 1;
         isAlive = true;
+        currentPoints = 0;
+        pointsText.text = currentPoints.ToString();
     }
 
     // Update is called once per frame
@@ -78,8 +84,6 @@ public class PlayerManager : MonoBehaviour
             }
 
         }
-
-
     }
     void UpdateHealth()
     {
@@ -103,15 +107,23 @@ public class PlayerManager : MonoBehaviour
     {
         if (isAlive)
         {
-
-            Debug.Log("Muelto");
             isAlive = false;
             gameManager.GameOver();
         }
     }
-    public void Heal(float healAmmount)
+
+    public void UpdatePoints(int pointsUpd)
     {
-        currentHealth += healAmmount;
+        currentPoints += pointsUpd;
+        pointsText.text = currentPoints.ToString();
+        GameObject popupPoints = Instantiate(pointsPopup, pointsPopupStartPoint.transform.position, pointsText.transform.rotation ,   pointsPopupStartPoint.transform);
+        TextMeshPro tmproText = popupPoints.GetComponent<TextMeshPro>();
+        if(tmproText)tmproText.SetText($"+ {pointsUpd.ToString()}");
+        StartCoroutine(MoveAndDestroyPointsPopup(popupPoints));
+    }
+    public void Heal(float healAmount)
+    {
+        currentHealth += healAmount;
         UpdateHealth();
     }
     public void Heal(bool max)
@@ -227,5 +239,18 @@ public class PlayerManager : MonoBehaviour
             vendingMachine = null;
             gameManager.vendingMachine = null;
         }
+    }
+    
+    IEnumerator MoveAndDestroyPointsPopup (GameObject popup)
+    {
+        float timer = .3f;
+        while (timer > 0)
+        {
+            popup.transform.position += Vector3.up * Time.deltaTime * .005f;
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(popup);
     }
 }

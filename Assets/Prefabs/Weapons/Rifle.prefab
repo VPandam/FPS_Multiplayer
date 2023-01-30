@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6396066251023828669}
   - component: {fileID: 584212452}
   - component: {fileID: 584212451}
+  - component: {fileID: 8143836159035313429}
   m_Layer: 2
   m_Name: Rifle
   m_TagString: Untagged
@@ -209,6 +210,7 @@ MonoBehaviour:
   trailGO: {fileID: 7172623167987145933}
   hitCross: {fileID: 0}
   scopeOverlay: {fileID: 0}
+  isScoping: 0
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}
@@ -218,6 +220,18 @@ MonoBehaviour:
   layerToIgnore:
     serializedVersion: 2
     m_Bits: 4
+--- !u!114 &8143836159035313429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879053965228656872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0793ee7b63a834389adab996eef0c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7172623167987145933
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Shotgun : MonoBehaviour, IWeapon
+public class Rifle : MonoBehaviour, IWeapon
 {
     float totalDamage;
 
@@ -9,15 +9,7 @@ public class Shotgun : MonoBehaviour, IWeapon
         float baseDamage = weaponSO.weaponDamage;
         totalDamage = baseDamage;
 
-        //If we are using a shotgun we make double damage if the enemy is close
-        if (weaponSO.weaponType == WeaponType.shotgun &&
-        (Vector3.Distance(transform.position, enemyManager.transform.position) < 6))
-        {
-            totalDamage = baseDamage * 5;
-        }
-
         //If we make a headshot we double the total damage
-
         if (hit.collider.gameObject.name == "HeadCollider")
             totalDamage *= 2;
 

@@ -92,10 +92,13 @@ public class VendingMachine : MonoBehaviourPunCallbacks
     }
     public void BuyWeapon()
     {
-        Debug.Log(_playerManager + " player manager vending machine");
         WeaponStats selectedWeaponSO = (WeaponStats)selectedShopSlot.itemSO;
-        _playerManager.SetWeaponAvailable(selectedWeaponSO.weaponType);
-        ExitShop();
+        if(_playerManager && _playerManager.currentPoints >= selectedWeaponSO.cost)
+        {
+            _playerManager.SetWeaponAvailable(selectedWeaponSO.weaponType);
+            _playerManager.UpdatePoints(-selectedWeaponSO.cost);
+            ExitShop();
+        }
     }
     public void BuyHeal()
     {

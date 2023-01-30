@@ -15,6 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: adf595fc7c71ac24bb685169ddcb8ce7, type: 3}
   itemType: 1
   weaponType: 2
+  cost: 2000
   weaponDamage: 15
   bulletSpeed: 100
   isAutomatic: 1
@@ -28,3 +29,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6038bddbaa53cd04187288653502c09d, type: 3}
   - {fileID: 8300000, guid: 6f1144c1571be0a4cb0367924502205f, type: 3}
   - {fileID: 8300000, guid: e14390608354d3543a5b066f3b54c9ef, type: 3}
+  collateral: 0

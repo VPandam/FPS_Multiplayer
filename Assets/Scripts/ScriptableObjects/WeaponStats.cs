@@ -10,6 +10,7 @@ public class WeaponStats : Item
     public WeaponType weaponType;
 
     [Header("Stats")]
+    public int cost;
     public int weaponDamage = 10;
     public float bulletSpeed = 100;
     public bool isAutomatic;

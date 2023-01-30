@@ -10,6 +10,7 @@ TagManager:
   - GameManager
   - VendingMachine
   - Weapon
+  - Headshot
   layers:
   - Default
   - TransparentFX

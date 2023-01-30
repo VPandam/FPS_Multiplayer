@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1201922112457899036}
   - component: {fileID: 2112564336337386831}
   - component: {fileID: 119302419027112010}
+  - component: {fileID: 2848999750204899054}
   m_Layer: 2
   m_Name: Sniper
   m_TagString: Untagged
@@ -113,6 +114,7 @@ MonoBehaviour:
   trailGO: {fileID: 0}
   hitCross: {fileID: 0}
   scopeOverlay: {fileID: 0}
+  isScoping: 0
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}
@@ -218,6 +220,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2848999750204899054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201922112455959260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0bf42a4de794e04e8794335b45c710e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6773689080628521328
 GameObject:
   m_ObjectHideFlags: 0

@@ -667,7 +667,7 @@ GameObject:
   - component: {fileID: 312278406}
   - component: {fileID: 312278405}
   m_Layer: 5
-  m_Name: ButtonHolder
+  m_Name: Heal
   m_TagString: ItemButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -867,7 +867,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -937,7 +937,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 497.75897
+      value: 806.56494
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -1153,7 +1153,7 @@ GameObject:
   - component: {fileID: 832145945}
   - component: {fileID: 832145943}
   m_Layer: 5
-  m_Name: ButtonHolder (1)
+  m_Name: Ammo
   m_TagString: ItemButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1710,6 +1710,11 @@ PrefabInstance:
       propertyPath: vendingMachine
       value: 
       objectReference: {fileID: 1002391181}
+    - target: {fileID: 6014088631531194741, guid: a848d6d1dad3a9b42a7dbca97c806197,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6067110716657247544, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_Sprite
@@ -1937,6 +1942,11 @@ PrefabInstance:
       propertyPath: vendingMachine
       value: 
       objectReference: {fileID: 1002391181}
+    - target: {fileID: 6014088631531194741, guid: a848d6d1dad3a9b42a7dbca97c806197,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6067110716657247544, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_Sprite
@@ -2002,7 +2012,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -2072,7 +2082,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1424.1769
+      value: 1115.3708
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -2104,7 +2114,7 @@ PrefabInstance:
         type: 3}
       propertyPath: weaponSO
       value: 
-      objectReference: {fileID: 11400000, guid: 8f264e3a82843d349abf0fcb79b89cd7,
+      objectReference: {fileID: 11400000, guid: 94b9c717a59bae540966127ffca551e7,
         type: 2}
     - target: {fileID: 5464473674120299867, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -2227,10 +2237,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 502297299}
-  - {fileID: 1363913903}
-  - {fileID: 69914853}
   - {fileID: 511232268}
+  - {fileID: 1363913903}
   - {fileID: 1709471230}
+  - {fileID: 69914853}
   m_Father: {fileID: 17776732}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2494,7 +2504,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -2564,7 +2574,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1115.3708
+      value: 497.75897
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -2701,6 +2711,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1345659895506795617, guid: 29fb33ec24aa15c40870ee755a1e5be2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1405446071744001719, guid: 29fb33ec24aa15c40870ee755a1e5be2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2916261254158589407, guid: 29fb33ec24aa15c40870ee755a1e5be2,
         type: 3}
       propertyPath: m_Name
@@ -2708,8 +2728,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2916261254158589407, guid: 29fb33ec24aa15c40870ee755a1e5be2,
         type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916261254158589407, guid: 29fb33ec24aa15c40870ee755a1e5be2,
+        type: 3}
       propertyPath: m_TagString
       value: VendingMachine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878189514104711043, guid: 29fb33ec24aa15c40870ee755a1e5be2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4612186632090356940, guid: 29fb33ec24aa15c40870ee755a1e5be2,
         type: 3}
@@ -2725,6 +2755,16 @@ PrefabInstance:
         type: 3}
       propertyPath: gameManager
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4816575726869401350, guid: 29fb33ec24aa15c40870ee755a1e5be2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6627948029589425350, guid: 29fb33ec24aa15c40870ee755a1e5be2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7201435313479851862, guid: 29fb33ec24aa15c40870ee755a1e5be2,
         type: 3}
@@ -2908,7 +2948,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -2978,7 +3018,7 @@ PrefabInstance:
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 806.56494
+      value: 1424.1769
       objectReference: {fileID: 0}
     - target: {fileID: 1177218514616658378, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
@@ -3003,6 +3043,12 @@ PrefabInstance:
     - target: {fileID: 5464473674120299867, guid: a848d6d1dad3a9b42a7dbca97c806197,
         type: 3}
       propertyPath: itemSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b1bb9307f4e07342b68194d6572326f,
+        type: 2}
+    - target: {fileID: 5464473674120299867, guid: a848d6d1dad3a9b42a7dbca97c806197,
+        type: 3}
+      propertyPath: weaponSO
       value: 
       objectReference: {fileID: 11400000, guid: 2b1bb9307f4e07342b68194d6572326f,
         type: 2}

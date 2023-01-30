@@ -15,6 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 1021d3bed087aa74ba2a2b6874296cd1, type: 3}
   itemType: 1
   weaponType: 3
+  cost: 500
   weaponDamage: 10
   bulletSpeed: 100
   isAutomatic: 0
@@ -27,3 +28,4 @@ MonoBehaviour:
   rechargeClips:
   - {fileID: 8300000, guid: 46e40a39df4209849b00644f20a18bfd, type: 3}
   - {fileID: 8300000, guid: 41d8edde2b3126e4baae02be18fabf8b, type: 3}
+  collateral: 0

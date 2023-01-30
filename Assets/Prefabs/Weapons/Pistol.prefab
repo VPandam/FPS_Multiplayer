@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 76250412716997109}
   - component: {fileID: 7812220416442448930}
-  - component: {fileID: 264150896629405790}
+  - component: {fileID: 2583401651768307212}
+  - component: {fileID: 9038791344519774477}
   m_Layer: 2
   m_Name: Pistol
   m_TagString: Untagged
@@ -138,7 +139,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &264150896629405790
+--- !u!114 &2583401651768307212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,26 +153,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSO: {fileID: 11400000, guid: fe5f2294ebbffdf488fa477847d4e7a2, type: 2}
   cameraGO: {fileID: 0}
+  mainCamera: {fileID: 0}
   gameManager: {fileID: 0}
   animator: {fileID: 0}
-  flashShot: {fileID: 236935943021760882}
-  shotClip: {fileID: 8300000, guid: e749dc2b9f9210a428c6a9d179d5e3a7, type: 3}
+  flashShot: {fileID: 0}
   aimCross: {fileID: 0}
   normalCross: {fileID: 21300000, guid: ee6b7ca0c3bb6674c95e44f898d774f1, type: 3}
   redCross: {fileID: 21300000, guid: adb53085daf953040bbd5c5c3e64b7f6, type: 3}
   cameraShake: {fileID: 0}
   trail: {fileID: 1690990362265313826, guid: 2bf857b4ea6116645ad1fc33bcb39282, type: 3}
-  trailGO: {fileID: 5346030790166199624}
+  trailGO: {fileID: 0}
   hitCross: {fileID: 0}
+  scopeOverlay: {fileID: 0}
+  isScoping: 0
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}
-  isAvailable: 1
+  isAvailable: 0
   indexPosition: 0
   photonView: {fileID: 0}
   layerToIgnore:
     serializedVersion: 2
     m_Bits: 4
+--- !u!114 &9038791344519774477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740057036687500111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70aeab10da50b994bb8725694a8c64a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2919700717769262089
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,12 +908,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d163b03192606f46a2ab64667097339, type: 3}
---- !u!198 &236935943021760882 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: -52630451203939392, guid: 6d163b03192606f46a2ab64667097339,
-    type: 3}
-  m_PrefabInstance: {fileID: 8938738292989063858}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6014340867612768384 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3421605665438108210, guid: 6d163b03192606f46a2ab64667097339,

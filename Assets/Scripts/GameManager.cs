@@ -238,7 +238,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Cursor.lockState = CursorLockMode.None;
         currentLocalGameState = GameState.shop;
-        Debug.Log(currentLocalGameState);
+        if (!PhotonNetwork.InRoom)
+        {
+            Time.timeScale = 0;
+        }
     }
     public void Resume()
     {

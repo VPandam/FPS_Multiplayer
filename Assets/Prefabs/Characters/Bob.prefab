@@ -149,6 +149,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 3395145342624437920}
   mouseSensitivity: 100
+  gameManager: {fileID: 0}
+  photonView: {fileID: 0}
+  _camera: {fileID: 0}
 --- !u!95 &7147789044646987706
 Animator:
   serializedVersion: 4
@@ -277,6 +280,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  photonView: {fileID: 0}
 --- !u!114 &9022994509055691938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,12 +295,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maximumHealth: 100
-  healthTMP: {fileID: 0}
+  healthSlider: {fileID: 0}
   isAlive: 1
   cameraShake: {fileID: 211960203}
+  gameManager: {fileID: 0}
   takeDamageCG: {fileID: 0}
   damagedBlinkTime: 0.5
   weaponHolder: {fileID: 6955148299969025718}
+  photonView: {fileID: 0}
 --- !u!1 &4397814004005742498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,7 +1041,7 @@ PrefabInstance:
     - target: {fileID: 2553120808957973525, guid: 77568649a3d50bd41a1f193c6c4bdfff,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2892807902302129839, guid: 77568649a3d50bd41a1f193c6c4bdfff,
         type: 3}
@@ -1458,6 +1464,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MachineGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 879053965228656872, guid: c531fb6335485f241b44171018bbd9a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5923091297958360574, guid: c531fb6335485f241b44171018bbd9a0,
         type: 3}

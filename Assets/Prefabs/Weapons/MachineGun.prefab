@@ -343,6 +343,7 @@ GameObject:
   - component: {fileID: 2892807902302129839}
   - component: {fileID: 3669217892660955523}
   - component: {fileID: 2106907521089985004}
+  - component: {fileID: 7592408623743066545}
   m_Layer: 2
   m_Name: Machinegun
   m_TagString: Untagged
@@ -498,6 +499,7 @@ MonoBehaviour:
   trailGO: {fileID: 8518478003616492085}
   hitCross: {fileID: 0}
   scopeOverlay: {fileID: 0}
+  isScoping: 0
   isReloading: 0
   currentAmmoText: {fileID: 0}
   reserveAmmoText: {fileID: 0}
@@ -507,6 +509,18 @@ MonoBehaviour:
   layerToIgnore:
     serializedVersion: 2
     m_Bits: 4
+--- !u!114 &7592408623743066545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2553120808957973525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35d9c7db059ee0a46afad1e4c55e03ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5251284568278202138
 GameObject:
   m_ObjectHideFlags: 0
